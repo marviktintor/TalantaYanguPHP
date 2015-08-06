@@ -159,6 +159,10 @@ function  favorite_project(project_id){
 	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_FAVORITE_PROJECT );
 }
 
+function view_user_profile(id_user){
+	setCache(SELECTED_USER_PROFILE, id_user);
+	window.open(URL_PERSON_PROFILE,"_blank","width=100;height=100");
+}
 function onReadyStateChange(action, method, url, params, request, intent) {
 
 	if (request.readyState == 4 && request.status == 200) {

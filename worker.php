@@ -274,7 +274,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 				$unlikes = get_comment_unlikes($id_comment);
 				$favorites = get_comment_favorites($id_comment);
 					
-				print_comment($id_comment,$comment_text,$likes,$unlikes,$favorites,$poster_name,$posted_time);
+				print_comment($id_comment,$comment_text,$likes,$unlikes,$favorites,$id_user,$poster_name,$posted_time);
 			}
 		}
 		
@@ -313,7 +313,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		return $dbutils->is_exists($table, $columns, $records);
 	}	
 	
-	function print_comment($id_comment,$comment_text,$likes,$unlikes,$favorites,$poster_name,$posted_time){
+	function print_comment($id_comment,$comment_text,$likes,$unlikes,$favorites,$id_poster,$poster_name,$posted_time){
 		echo '<div class="card minimal-margin minimal-padding hoverable" >
 				<div style="padding:10px;">
 					<h6 class="right" style="color:#00b8d4">'.$posted_time.'</h6><br />
@@ -324,7 +324,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 						<span style="color:#e57373">'.$unlikes.'<img onclick="unlike_project_comment('.$id_comment.');" class="impressions" src="images/unlike.png"/></span>
 						<span style="color:#ef6c00;">'.$favorites.'<img onclick="favorite_project_comment('.$id_comment.');" class="impressions" src="images/favorite.png"/></span>
 						</span>
-						<span style="color:#00897b"class="right">'.$poster_name.'</span></div>
+						<span style="color:#00897b"class="right" onclick="view_user_profile('.$id_poster.');">'.$poster_name.'</span></div>
 				</div></div>';
 	}
 	function post_project(){
@@ -376,11 +376,11 @@ function fetch_projects(){
 		
 		$views = get_project_views($id_project);
 		
-		print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlikes,$views,$poster_name,$posted_time);
+		print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlikes,$views,$poster,$poster_name,$posted_time);
 	}
 }	
 
-function print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlikes,$views,$poster_name,$posted_time){
+function print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlikes,$views,$id_poster,$poster_name,$posted_time){
 	
 	echo '<div class="card minimal-margin minimal-padding hoverable" onclick="view_project('.$id_project.')">
 				<div style="padding:10px;">
@@ -394,7 +394,7 @@ function print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlike
 							<span style="color:#e57373">'.$unlikes.'<img onclick="unlike_project('.$id_project.');" class="impressions" src="images/unlike.png"/></span>
 							<span style="color:#ef6c00;">'.$favorates.'<img onclick="favorite_project('.$id_project.');" class="impressions" src="images/favorite.png"/></span>
 							</span>
-							<span style="color:#00897b"class="right">'.$poster_name.'</span></div>
+							<span style="color:#00897b"class="right" onclick="view_user_profile('.$id_poster.');" >'.$poster_name.'</span></div>
 		</div>	</div>';
 }
 

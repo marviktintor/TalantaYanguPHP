@@ -8,6 +8,9 @@ CACHE_USER = "cached_user";
 SELECTED_PROJECT = "selected_project";
 URL_WORKER ="http://localhost/talantayanguphp/worker.php";
 
+SELECTED_USER_PROFILE="selected_user_profile";
+URL_PERSON_PROFILE = "user_profile/index.html";
+
 //Actions
 ACTION_QUERY = "query";
 ACTION_INSERT = "insert";
