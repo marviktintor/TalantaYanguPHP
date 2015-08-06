@@ -129,6 +129,36 @@ function is_valid_project(tags, title, desc) {
 	
 	return formValid;
 }
+
+
+ 
+
+function like_project_comment(id_comment){
+	params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_COMMENT +"&id_comment=" +id_comment;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_COMMENT);
+}
+function unlike_project_comment(id_comment){
+	params = "action="+ACTION_INSERT+"&intent="+INTENT_UNLIKE_COMMENT +"&id_comment=" +id_comment;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_COMMENT );
+}
+function favorite_project_comment(id_comment){
+	params = "action="+ACTION_INSERT+"&intent="+INTENT_FAVORITE_COMMENT +"&id_comment=" +id_comment;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_FAVORITE_COMMENT);
+}
+
+function like_project(project_id){
+	params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_PROJECT +"&project_id=" +project_id;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_PROJECT );
+}
+function unlike_project(project_id){
+	params = "action="+ACTION_INSERT+"&intent="+ INTENT_UNLIKE_PROJECT+"&project_id=" +project_id;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_PROJECT );
+}
+function  favorite_project(project_id){
+	params = "action="+ACTION_INSERT+"&intent="+ INTENT_FAVORITE_PROJECT+"&project_id=" +project_id;
+	ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_FAVORITE_PROJECT );
+}
+
 function onReadyStateChange(action, method, url, params, request, intent) {
 
 	if (request.readyState == 4 && request.status == 200) {
@@ -138,6 +168,14 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 				setElementHtml('posted_projects', request.responseText);
 			}
 			if (intent == INTENT_LEAVE_PROJECT_COMMENT) {
+				view_project(getCache(SELECTED_PROJECT));
+			}
+			
+			if (intent == INTENT_LIKE_PROJECT || intent == INTENT_UNLIKE_PROJECT || intent == INTENT_FAVORITE_PROJECT ) {
+				fetch_projects();
+			}
+			
+			if (intent == INTENT_LIKE_COMMENT || intent == INTENT_UNLIKE_COMMENT || intent == INTENT_FAVORITE_COMMENT) {
 				view_project(getCache(SELECTED_PROJECT));
 			}
 		}

@@ -42,6 +42,26 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		if ($intent == INTENT_LEAVE_PROJECT_COMMENT) {
 			post_project_comments();
 		}
+		
+		
+		if ($intent == INTENT_LIKE_PROJECT) {
+			like_project();
+		}
+		if ($intent == INTENT_UNLIKE_PROJECT) {
+			unlike_project();
+		}
+		if ($intent == INTENT_FAVORITE_PROJECT) {
+			favorite_project();
+		}
+		if ($intent == INTENT_LIKE_COMMENT) {
+			like_project_comment();
+		}
+		if ($intent == INTENT_UNLIKE_COMMENT) {
+			unlike_project_comment();
+		}
+		if ($intent == INTENT_FAVORITE_COMMENT) {
+			favorite_project_comment();
+		}
 	}
 	if ($action == ACTION_QUERY) {
 		if ($intent == INTENT_FETCH_PROJECTS) {
@@ -56,9 +76,51 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		echo "Cannot hack into the server";
 	}
 	
+	
+	
+	function like_project_comment(){
+		
+		`id_comment_impression`, `id_comment`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `comments_impressions`
+		
+		$id_comment = $_POST['id_comment'];
+		$user = $_POST['user'];
+		$comment = $_POST['comment'];
+		$like = 1;
+		
+		$table = "project_impressions";
+		$columns= array("id_comment", "id_user", "likes");
+		$records = array($id_comment,$user,$like);
+		$dbutils = new db_utils();
+		
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_COMMENT +"&id_comment=" +id_comment;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_COMMENT);
+	}
+	function unlike_project_comment(){
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_UNLIKE_COMMENT +"&id_comment=" +id_comment;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_COMMENT );
+	}
+	function favorite_project_comment(){
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_FAVORITE_COMMENT +"&id_comment=" +id_comment;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_FAVORITE_COMMENT);
+	}
+	
+	function like_project(){
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_PROJECT +"&project_id=" +project_id;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_PROJECT );
+	}
+	function unlike_project(){
+		params = "action="+ACTION_INSERT+"&intent="+ INTENT_UNLIKE_PROJECT+"&project_id=" +project_id;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_PROJECT );
+	}
+	function  favorite_project(){
+		params = "action="+ACTION_INSERT+"&intent="+ INTENT_FAVORITE_PROJECT+"&project_id=" +project_id;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_FAVORITE_PROJECT );
+	}
+	
+	
 	function post_project_comments(){
 		$project_id = $_POST['id_project'];
-		$user = $_POST['id_project'];
+		$user = $_POST['user'];
 		$comment = $_POST['comment'];
 		
 		$table = "comments";

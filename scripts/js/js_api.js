@@ -72,6 +72,10 @@ function ajaxCommit(action,method,url,params,intent) {
 	
 	if(method.toUpperCase()=="POST"){
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+		if(getCache(CACHE_USER) == 'null'){
+			alert("You need to be logged in");
+			return;
+		}
 		request.send(params	+"&user="+getCache(CACHE_USER) );
 	}
 	if(method.toUpperCase()=="GET"){
