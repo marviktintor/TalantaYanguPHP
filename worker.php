@@ -13,6 +13,7 @@ define ( 'INTENT_POST_PROJECT', 'post_project' );
 define ( 'INTENT_FETCH_PROJECTS', 'fetch_projects' );
 define ( 'INTENT_FETCH_SELECTED_PROJECT', 'fetch_selected_project' );
 define ( 'INTENT_LEAVE_PROJECT_COMMENT', 'leave_project_comments' );
+define ( 'INTENT_VIEW_PERSON_PROFILE', 'view_person_profile' );
 
 
 define ( 'INTENT_LIKE_PROJECT', 'like_project' );
@@ -70,13 +71,18 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		if ($intent == INTENT_FETCH_SELECTED_PROJECT) {
 			fetch_project_infos();
 		}
+		if ($intent == INTENT_VIEW_PERSON_PROFILE) {
+			show_selected_user_profile();
+		}
 		
 	}
 }else{
 		echo "Cannot hack into the server";
 	}
 	
-	
+	function show_selected_user_profile(){
+		$user_id = $_POST['selected_user_id'];
+	}
 	
 	function like_project_comment($check_unlike){
 		
