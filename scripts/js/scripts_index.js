@@ -6,6 +6,7 @@ INTENT_POST_PROJECT = "post_project";
 INTENT_FETCH_PROJECTS = "fetch_projects";
 INTENT_FETCH_SELECTED_PROJECT = "fetch_selected_project";
 INTENT_LEAVE_PROJECT_COMMENT = "leave_project_comments";
+INTENT_SEARCH_PROJECT = "search_project";
 
 INTENT_LIKE_PROJECT = "like_project";
 INTENT_UNLIKE_PROJECT = "unlike_project";
@@ -37,10 +38,14 @@ function setEventListeners() {
 	//Add Button Event Listeners
 	addButtonEventListeners();
 	
+	//Add Input Listeners
+	addInputEventListeners();
+	
 	
 	
 	
 }
+
 
 function fillForm(){
 	setElementValue('input_project_title', "Kenya Innovation Center");
@@ -51,11 +56,27 @@ function fillForm(){
 }
 
 function addButtonEventListeners(){
-	getElement('id_button_post_project').addEventListener('click',post_project,false);
+	
 	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
 	
 }
 
+function addInputEventListeners(){
+	getElement('input_search_projects').addEventListener('input',search_project,false);
+	
+}
+
+function search_project(){
+	var searchKey = getElementValue('input_search_projects');
+	params = "action="+ACTION_QUERY+"&intent="+INTENT_SEARCH_PROJECT+"&search_key="+searchKey;
+	
+	if(searchKey == ""){
+		fetch_projects();
+	}else{
+		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_SEARCH_PROJECT);
+	}
+	
+}
 function view_project(project_id){
 	setCache(SELECTED_PROJECT, project_id);
 	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
@@ -196,10 +217,14 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 			if (intent == INTENT_FETCH_PROJECTS) {
 				setElementHtml('posted_projects', request.responseText);
 			}
+			if (intent == INTENT_SEARCH_PROJECT) { 
+				setElementHtml('posted_projects', request.responseText);
+			}
 			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
 				setElementHtml('selected_project_comments', request.responseText);
 				fetch_projects();
 			}
+			
 		}
 
 	}

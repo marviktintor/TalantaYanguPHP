@@ -14,6 +14,8 @@ define ( 'INTENT_FETCH_PROJECTS', 'fetch_projects' );
 define ( 'INTENT_FETCH_SELECTED_PROJECT', 'fetch_selected_project' );
 define ( 'INTENT_LEAVE_PROJECT_COMMENT', 'leave_project_comments' );
 define ( 'INTENT_VIEW_PERSON_PROFILE', 'view_person_profile' );
+define ( 'INTENT_SEARCH_PROJECT', 'search_project' );
+
 
 
 define ( 'INTENT_LIKE_PROJECT', 'like_project' );
@@ -66,7 +68,10 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	if ($action == ACTION_QUERY) {
 		if ($intent == INTENT_FETCH_PROJECTS) {
-			fetch_projects();
+			fetch_projects(false);
+		}
+		if ($intent == INTENT_SEARCH_PROJECT) {
+			search_projects();
 		}
 		if ($intent == INTENT_FETCH_SELECTED_PROJECT) {
 			fetch_project_infos();
@@ -82,8 +87,172 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	function show_selected_user_profile(){
 		$user_id = $_POST['selected_user_id'];
+		
+		$table = "users";
+		$columns= array("id_users");
+		$records = array($user_id);
+		$dbutils = new db_utils();
+		
+		$user_info = $dbutils->query($table, $columns, $records);
+		
+		$id_users= $user_info[0]['id_users'];
+		$user_type= $user_info[0]['user_type'];
+		$firstname= $user_info[0]['firstname'];
+		$lastname= $user_info[0]['lastname'];
+		$username= $user_info[0]['username'];
+		/* $password= $user_info[0]['password']; */
+		$email= $user_info[0]['email'];
+		$phone= $user_info[0]['phone'];
+		$id_number = $user_info[0]['id_number'];
+		$commit_time= $user_info[0]['commit_time'];
+		
+		$school_info = get_user_school_info($id_users);
+		$employment_info = get_employment_info($id_users);
+		$social_media_info = get_social_media_info($id_users);
+		
+		
+		print_user_profile($id_users,$user_type,$firstname,$lastname,$username,$email,$phone,$commit_time,$school_info,$employment_info,$social_media_info);
 	}
 	
+	function print_user_profile($id_users,$user_type,$firstname,$lastname,$username,$email,$phone,$commit_time,$school_info,$employment_info,$social_media_info){
+		echo '<header id="header" style="background: url(\'images/victor_mwenda.jpg\')"></header>
+				<div id="main">
+					<div id="one" > <h5>'.$firstname.' '.$lastname.'</h5>
+						<header class="major"></header>
+					</div>	
+						<div class="4u$ 12u$(small)">
+							<ul class="labeled-icons">
+								<li>
+									<h6 ><span class="label">Address</span></h6>
+								</li>
+								<li>
+									<h6 ><span class="label">Phone</span> <a href="tel:'.$phone.'">'.$phone.'</a></h6>
+								</li>
+								<li>
+									<h6 ><span class="label">Email</span> <a href="mailto:'.$email.'">'.$email.'</a></h6>
+								</li>
+							</ul>
+						</div>
+						<div >
+							<h6>About</h6>
+							<article class="" id="id_article_about_user"></article>
+						</div>
+						<div>
+							<div >
+								<h6>Employment History</h6>
+								<div>'.$employment_info.'</div>
+							</div>
+							<div >
+								<h6>School History</h6>
+								<div>'.$school_info.'</div>
+							</div>
+						</div>
+					</div>
+					<footer id="footer">
+						<ul class="icons">
+							
+						</ul>
+						<ul class="copyright">
+							<li>&copy; </li><li> <a href="#">Kenya Talents</a></li>
+						</ul>
+					</footer>
+				</div>';
+	}
+	function get_user_school_info($id_users){
+
+		$table = "school_info";
+		$columns= array("id_user");
+		$records = array($id_users);
+		$dbutils = new db_utils();
+		
+		$school_info = $dbutils->query($table, $columns, $records);
+		
+		$school_infos = "";
+		
+		if(count($school_info)>0){
+			
+			for($i = 0;$i<count($school_info);$i++){
+				
+				$id_school = $school_info[$i]['id_school'];
+				$id_user= $school_info[$i]['id_user'];
+				$join_date= $school_info[$i]['join_date'];
+				$leave_date= $school_info[$i]['leave_date'];
+				$course= $school_info[$i]['course'];
+				
+				$school_name = get_school_name($id_school);
+				
+				$school_infos .= populate_school_info($id_school,$join_date,$leave_date,$course,$school_name);
+			}
+			
+		}
+		
+		if(count($school_info)==0){
+			$school_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
+						<h5>'.get_user_username($id_users).' has not posted any school Info! </h5>
+					</div>';
+		}
+		
+		return $school_infos;
+	}
+	
+	
+	function get_employment_info($id_user){
+		
+		$table = "school_info";
+		$columns= array("id_user");
+		$records = array($id_user);
+		$dbutils = new db_utils();
+		
+		$employment_info = $dbutils->query($table, $columns, $records);
+		
+		$employment_infos = "";
+		
+		if(count($employment_info)>0){
+			for($i = 0;$i <count($employment_info);$i++){
+				$id_company= $employment_info[$i]['id_company='];
+				$id_user= $employment_info[$i]['id_user'];
+				$start_date= $employment_info[$i]['start_date'];
+				$stop_date= $employment_info[$i]['stop_date'];
+				$role= $employment_info[$i]['role'];
+				$county = $employment_info[$i]['county'];
+			}
+			
+		}
+		if(count($employment_info)==0){
+			$employment_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
+						<h5>'.get_user_username($id_user).' has not posted any employment Info! </h5>
+					</div>';
+		}
+	
+		return $employment_infos;
+	}
+	function get_social_media_info($id_users){
+		$social_media ='<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>';
+	}
+	function populate_school_info($id_school,$join_date,$leave_date,$course,$school_name){
+		return '<div class="card hoverable " style="padding:10px; margin:10px;">
+				<label class="right">'.$join_date.' - '.$leave_date.'</label><br />
+				<span>'.$course.'</span><br />
+				<label class="left">'.$school_name.'</label><br />
+				</div>';
+		
+		
+	}
+	function get_school_name($id_school){
+		
+		$table = "schools";
+		$columns= array("id_school");
+		$records = array($id_school);
+		$dbutils = new db_utils();
+		
+		$schools = $dbutils->query($table, $columns, $records);
+		if(count($schools)>0){
+			return $schools[0]['school_name']."(".$schools[0]['county'].")";
+		}else return "Unknown County";
+	}
 	function like_project_comment($check_unlike){
 		
 		$id_comment = $_POST['id_comment'];
@@ -274,7 +443,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 				$commit_time = $comments[$i]['commit_time'];
 					
 				$posted_time = get_human_friendly_time($commit_time);
-				$poster_name = get_poster_username($id_user);
+				$poster_name = get_user_username($id_user);
 					
 				$likes = get_comment_likes($id_comment);
 				$unlikes = get_comment_unlikes($id_comment);
@@ -351,16 +520,47 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 			$dbutils->insert_records($table, $columns, $records);
 		}
 		
-		fetch_projects();
+		fetch_projects(false);
 	}
 	
-function fetch_projects(){
+function search_projects(){
+	fetch_projects(true);
+}
+function fetch_projects($search){
 	$dbutils = new db_utils();
 	$table = "projects";
 	
-	$columns = array(); $records= array();
+	$projects = null;
 	
-	$projects = $dbutils->query($table, $columns, $records);
+	if($search){
+		$search_key = $_POST['search_key'];
+		
+		$columns = array();
+		$records= array();
+		
+		$user_ids = opt_user_id($search_key);
+		if(count($user_ids) == 0){
+			$columns = array("project_title", "project_tags", "project_desc");
+			$records= array($search_key,$search_key,$search_key);
+			$projects = $dbutils->search($table, $columns, $records);
+		}
+		if(count($user_ids) > 0){
+			
+			for($i = 0;$i<count($user_ids);$i++){
+				
+				$id_user = $user_ids[$i]['id_users']; 
+				$columns = array("project_title", "project_tags", "project_desc","id_user");
+				$records= array($search_key,$search_key,$search_key,$id_user);
+				$projects = $dbutils->search($table, $columns, $records);
+			}
+		}
+		
+		
+	}else{
+		$columns = array(); $records= array();
+		$projects = $dbutils->query($table, $columns, $records);
+	}
+	
 	
 	for($i = 0;$i <count($projects);$i++){
 
@@ -374,7 +574,7 @@ function fetch_projects(){
 		$posted_time = get_human_friendly_time($post_time);
 		
 		$poster = $projects[$i]['id_user'];
-		$poster_name = get_poster_username($poster);
+		$poster_name = get_user_username($poster);
 		
 		$likes = get_project_likes($id_project);
 		$favorates = get_project_favorates($id_project);
@@ -407,15 +607,26 @@ function print_projects($id_project,$title,$desc,$tags,$likes,$favorates,$unlike
 function get_human_friendly_time($post_time){
 	return $post_time;
 }
-function get_poster_username($poster){
+
+function get_user_username($id_user){
 	
 	$table = "users";
 	$columns = array("id_users");
-	$records = array($poster);
+	$records = array($id_user);
 	$dbutils = new db_utils();
 	
 	$views = $dbutils->query($table, $columns, $records);
 	return $views[0]['username'];
+}
+
+function opt_user_id($search_key){
+	
+	$table = "users";
+	$columns = array( "firstname", "lastname", "username", "email", "phone", "id_number");
+	$records = array($search_key,$search_key,$search_key,$search_key,$search_key,$search_key);
+	$dbutils = new db_utils();
+	return  $dbutils->search($table, $columns, $records);
+	
 }
 function get_project_likes($id_project){
 

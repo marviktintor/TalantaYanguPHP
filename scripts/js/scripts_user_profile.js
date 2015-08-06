@@ -1,7 +1,6 @@
 INTENT_VIEW_PERSON_PROFILE = "view_person_profile";
 
 window.onload = function(){
-	
 	if(getCache(SELECTED_USER_PROFILE) == 'null'){
 		window.close();
 	}else{
@@ -14,6 +13,7 @@ function loadUserProfile(){
 	var user_id = getCache(SELECTED_USER_PROFILE);
 	params = "action="+ACTION_QUERY+"&intent="+INTENT_VIEW_PERSON_PROFILE+"&selected_user_id="+user_id;
 	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_VIEW_PERSON_PROFILE);
+	
 }
 function onReadyStateChange(action, method, url, params, request, intent) {
 
@@ -33,7 +33,8 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 
 		if (action == ACTION_QUERY) {
 			
-			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
+			if (intent == INTENT_VIEW_PERSON_PROFILE) { 
+				
 				setElementHtml('id_user_profile_body', request.responseText);
 			}
 		}
