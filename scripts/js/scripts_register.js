@@ -124,6 +124,7 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 				if(intent == INTENT_SIGNUP){
 					//alert(request.responseText);
 					setCache(CACHE_USER, request.responseText);
+					window.close();
 				}
 		}
 

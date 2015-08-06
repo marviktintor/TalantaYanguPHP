@@ -65,7 +65,7 @@ class db_utils{
 			}
 		}
 		
-	 $query .=";"; if($printSQL){echo $query;}
+	 $query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 		
 	$rows = $this->db->query($query); //Perform Query
 	$num_rows = $rows->num_rows; /*Count the Number of rows */
@@ -117,7 +117,7 @@ class db_utils{
 				}
 			}
 			
-			 $query .=";"; if($printSQL){echo $query;}
+			 $query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 			
 			$delete =  $this->db->query($query); 
 			return $delete;//Return number of deleted rows
@@ -250,7 +250,7 @@ class db_utils{
 		}
 		
 		
-		  $query .=";"; if($printSQL){echo $query;}
+		  $query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 		return $this->db->query($query);
 	}
 	
@@ -288,7 +288,7 @@ class db_utils{
 			
 		} 
 		
-		$query .=";"; if($printSQL){echo $query;}
+		$query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 		
 		return $this->db->query($query);
 	}
@@ -332,7 +332,7 @@ class db_utils{
 				}
 			}
 		
-			 $query .=";"; if($printSQL){echo $query;}
+			 $query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 		
 			$results = array();
 			$exec = $this->db->query($query); //Perform Query
@@ -390,7 +390,7 @@ class db_utils{
 				}
 			}
 		
-			 $query .=";"; if($printSQL){echo $query;}
+			 $query .=" ORDER BY `commit_time` DESC;"; if($printSQL){echo $query;}
 		
 			$results = array();
 			$exec = $this->db->query($query); //Perform Query
