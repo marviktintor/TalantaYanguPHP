@@ -26,7 +26,7 @@ window.onload = function() {
 
 function init(){
 	setCache(SELECTED_PROJECT, "-1");
-	
+	hideElement('post_project');
 	
 	setEventListeners();
 	fillForm();

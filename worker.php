@@ -45,19 +45,19 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		
 		if ($intent == INTENT_LIKE_PROJECT) {
-			like_project();
+			like_project(false);
 		}
 		if ($intent == INTENT_UNLIKE_PROJECT) {
-			unlike_project();
+			unlike_project(false);
 		}
 		if ($intent == INTENT_FAVORITE_PROJECT) {
 			favorite_project();
 		}
 		if ($intent == INTENT_LIKE_COMMENT) {
-			like_project_comment();
+			like_project_comment(false);
 		}
 		if ($intent == INTENT_UNLIKE_COMMENT) {
-			unlike_project_comment();
+			unlike_project_comment(false);
 		}
 		if ($intent == INTENT_FAVORITE_COMMENT) {
 			favorite_project_comment();
@@ -78,43 +78,120 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	
 	
-	function like_project_comment(){
-		
-		`id_comment_impression`, `id_comment`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `comments_impressions`
+	function like_project_comment($check_unlike){
 		
 		$id_comment = $_POST['id_comment'];
 		$user = $_POST['user'];
 		$comment = $_POST['comment'];
 		$like = 1;
 		
-		$table = "project_impressions";
+		$table = "comments_impressions";
 		$columns= array("id_comment", "id_user", "likes");
 		$records = array($id_comment,$user,$like);
 		$dbutils = new db_utils();
 		
-		params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_COMMENT +"&id_comment=" +id_comment;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_COMMENT);
-	}
-	function unlike_project_comment(){
-		params = "action="+ACTION_INSERT+"&intent="+INTENT_UNLIKE_COMMENT +"&id_comment=" +id_comment;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_COMMENT );
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ 
+			if($check_unlike == false){
+				$dbutils->insert_records($table, $columns, $records);
+				unlike_project_comment(true);
+			}
+		}
+		
+		
+		
+	} 
+	function unlike_project_comment($check_unlike){
+		$id_comment = $_POST['id_comment'];
+		$user = $_POST['user'];
+		$comment = $_POST['comment'];
+		$unlike = 1;
+		
+		$table = "comments_impressions";
+		$columns= array("id_comment", "id_user", "unlikes");
+		$records = array($id_comment,$user,$unlike);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ 
+			if($check_unlike == false){
+				$dbutils->insert_records($table, $columns, $records);
+				like_project_comment(true);
+			}
+		}
 	}
 	function favorite_project_comment(){
-		params = "action="+ACTION_INSERT+"&intent="+INTENT_FAVORITE_COMMENT +"&id_comment=" +id_comment;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_FAVORITE_COMMENT);
+		$id_comment = $_POST['id_comment'];
+		$user = $_POST['user'];
+		$comment = $_POST['comment'];
+		$favorites = 1;
+		
+		$table = "comments_impressions";
+		$columns= array("id_comment", "id_user", "favorites");
+		$records = array($id_comment,$user,$favorites);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ $dbutils->insert_records($table, $columns, $records);}
 	}
 	
-	function like_project(){
-		params = "action="+ACTION_INSERT+"&intent="+INTENT_LIKE_PROJECT +"&project_id=" +project_id;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_LIKE_PROJECT );
+	function like_project($check_unlike){
+		
+		$id_project = $_POST['project_id'];
+		$user = $_POST['user'];
+		$likes = 1;
+		
+		$table = "project_impressions";
+		$columns= array("id_project", "id_user", "likes");
+		$records = array($id_project,$user,$likes);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ 
+			if($check_unlike==false){
+				$dbutils->insert_records($table, $columns, $records);
+				unlike_project(true);
+			}
+		}
+		
 	}
-	function unlike_project(){
-		params = "action="+ACTION_INSERT+"&intent="+ INTENT_UNLIKE_PROJECT+"&project_id=" +project_id;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_UNLIKE_PROJECT );
+	function unlike_project($check_like){
+		$id_project = $_POST['project_id'];
+		$user = $_POST['user'];
+		$unlikes = 1;
+		
+		$table = "project_impressions";
+		$columns= array("id_project", "id_user", "unlikes");
+		$records = array($id_project,$user,$unlikes);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ 
+			if($check_like == false){
+				$dbutils->insert_records($table, $columns, $records);
+				like_project(true);
+			}
+			
+		}
 	}
 	function  favorite_project(){
-		params = "action="+ACTION_INSERT+"&intent="+ INTENT_FAVORITE_PROJECT+"&project_id=" +project_id;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params,INTENT_FAVORITE_PROJECT );
+		$id_project = $_POST['project_id'];
+		$user = $_POST['user'];
+		$favorites = 1;
+		
+		$table = "project_impressions";
+		$columns= array("id_project", "id_user", "favorites");
+		$records = array($id_project,$user,$favorites);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 1){
+			$dbutils->delete_record($table, $columns, $records);
+		}else{ $dbutils->insert_records($table, $columns, $records);}
 	}
 	
 	
@@ -146,6 +223,33 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	function fetch_project_comments($project_id){
 		
 		$dbutils = new db_utils();
+		
+		$id_user = $_POST['user'];
+		$table = "project_views";
+		$columns= array("id_project","id_user");
+		$records = array($project_id,$id_user);
+		
+		
+		if($dbutils -> is_exists($table, $columns, $records) > 0){
+			$columns= array("id_project","id_user");
+			$records = array($project_id,$id_user);
+			$project_views = $dbutils->query($table, $columns, $records);
+			$views = $project_views[0]['count_views'];
+			
+			$columns= array("id_project","id_user","count_views");
+			$records = array($project_id,$id_user,$views+1);
+			
+			$where_columns= array("id_project","id_user","count_views");
+			$where_records = array($project_id,$id_user,$views);
+			
+			$dbutils->update_record($table, $columns, $records, $where_columns, $where_records);
+		}
+		
+		if($dbutils -> is_exists($table, $columns, $records) == 0){
+			$columns= array("id_project","id_user","count_views");
+			$records = array($project_id,$id_user,1);
+			$dbutils->insert_records($table, $columns, $records);
+		}
 		
 		$table = "comments";
 		$columns= array("id_project");
@@ -211,17 +315,17 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	function print_comment($id_comment,$comment_text,$likes,$unlikes,$favorites,$poster_name,$posted_time){
 		echo '<div class="card minimal-margin minimal-padding hoverable" >
-<div style="padding:10px;">
-			<h6 class="right" style="color:#00b8d4">'.$posted_time.'</h6><br />
-			<h6 style="font-size:20px">'.$comment_text.'</h6>
-
-			<div class="">			
-<span style="color:#00b0ff">'.$likes.'<img onclick="like_project_comment('.$id_comment.');" class="impressions" src="images/like.png"/></span>
-			<span style="color:#e57373">'.$unlikes.'<img onclick="unlike_project_comment('.$id_comment.');" class="impressions" src="images/unlike.png"/></span>
-			<span style="color:#ef6c00;">'.$favorites.'<img onclick="favorite_project_comment('.$id_comment.');" class="impressions" src="images/favorite.png"/></span>
-			</span>
-			<span style="color:#00897b"class="right">'.$poster_name.'</span></div>
-		</div>	</div>';
+				<div style="padding:10px;">
+					<h6 class="right" style="color:#00b8d4">'.$posted_time.'</h6><br />
+					<h6 style="font-size:20px">'.$comment_text.'</h6>
+		
+					<div class="">			
+						<span style="color:#00b0ff">'.$likes.'<img onclick="like_project_comment('.$id_comment.');" class="impressions" src="images/like.png"/></span>
+						<span style="color:#e57373">'.$unlikes.'<img onclick="unlike_project_comment('.$id_comment.');" class="impressions" src="images/unlike.png"/></span>
+						<span style="color:#ef6c00;">'.$favorites.'<img onclick="favorite_project_comment('.$id_comment.');" class="impressions" src="images/favorite.png"/></span>
+						</span>
+						<span style="color:#00897b"class="right">'.$poster_name.'</span></div>
+				</div></div>';
 	}
 	function post_project(){
 		
