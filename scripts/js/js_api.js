@@ -5,6 +5,7 @@ METHOD_POST = "POST";
 METHOD_GET = "GET";
 
 CACHE_USER = "cached_user";
+SELECTED_PROJECT = "selected_project";
 URL_WORKER ="http://localhost/talantayanguphp/worker.php";
 
 //Actions
@@ -71,7 +72,7 @@ function ajaxCommit(action,method,url,params,intent) {
 	
 	if(method.toUpperCase()=="POST"){
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		request.send(params);
+		request.send(params	+"&user="+getCache(CACHE_USER) );
 	}
 	if(method.toUpperCase()=="GET"){
 		request.send(null);

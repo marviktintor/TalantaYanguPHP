@@ -4,6 +4,8 @@
 
 INTENT_POST_PROJECT = "post_project";
 INTENT_FETCH_PROJECTS = "fetch_projects";
+INTENT_FETCH_SELECTED_PROJECT = "fetch_selected_project";
+INTENT_LEAVE_PROJECT_COMMENT = "leave_project_comments";
 
 INTENT_LIKE_PROJECT = "like_project";
 INTENT_UNLIKE_PROJECT = "unlike_project";
@@ -17,12 +19,19 @@ INTENT_SEARCH = "search";
 
 window.onload = function() {
 
+	
+	
+	init();
+}
+
+function init(){
+	setCache(SELECTED_PROJECT, "-1");
+	
+	
 	setEventListeners();
 	fillForm();
 	fetch_projects();
 }
-
-
 function setEventListeners() {
 
 	//Add Button Event Listeners
@@ -43,12 +52,34 @@ function fillForm(){
 
 function addButtonEventListeners(){
 	getElement('id_button_post_project').addEventListener('click',post_project,false);
+	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
 	
 }
 
+function view_project(project_id){
+	setCache(SELECTED_PROJECT, project_id);
+	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
+	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_SELECTED_PROJECT);
+}
 function fetch_projects(){
 	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_PROJECTS
 	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_PROJECTS);
+}
+
+function post_project_comments(){
+	if(getCache(SELECTED_PROJECT) == "-1"){
+		alert("Please click on a Project");
+		return;
+	}
+	
+	var comment = getElementValue('input_leave_comment');
+	
+	if(comment != ""){
+		project_id = getCache(SELECTED_PROJECT)
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_LEAVE_PROJECT_COMMENT+"&id_project="+project_id+"&comment="+comment;
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_LEAVE_PROJECT_COMMENT);
+		
+	}else { alert("Failed!Enter your comment(s)");}
 }
 function post_project(){
 	
@@ -65,7 +96,6 @@ function post_project(){
 		}
 		
 		params = "action="+ACTION_INSERT+"&intent="+INTENT_POST_PROJECT
-		+"&user="+cached_user 
 		+"&tags=" +tags
 		+"&title=" +title
 		+"&desc=" +desc;
@@ -107,6 +137,9 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 			if (intent == INTENT_POST_PROJECT) {
 				setElementHtml('posted_projects', request.responseText);
 			}
+			if (intent == INTENT_LEAVE_PROJECT_COMMENT) {
+				view_project(getCache(SELECTED_PROJECT));
+			}
 		}
 
 		if (action == ACTION_UPDATE) {
@@ -120,6 +153,10 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 		if (action == ACTION_QUERY) {
 			if (intent == INTENT_FETCH_PROJECTS) {
 				setElementHtml('posted_projects', request.responseText);
+			}
+			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
+				setElementHtml('selected_project_comments', request.responseText);
+				fetch_projects();
 			}
 		}
 
