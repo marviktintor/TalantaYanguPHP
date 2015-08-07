@@ -15,30 +15,23 @@
 </head>
 <body>
 
-	<div class="row" id="post_project">
-		<form>
-
-			<div class="input-field ">
-				<input id="input_project_title" type="text" placeholder="Title">
-			</div>
+	 <div class="card-panel teal lighten-2" style="margin-top:-10px; height:70px;">
+	 	<div class="left">
+	 		<a href="#post_project" class="waves-effect waves-teal btn-flat modal-trigger"><h6 style="color:#FFF">POST PROJECT</h6></a>
+	 	</div>
+	 	<div class="right">
+	 		<a class="waves-effect waves-teal btn-flat"><h6 style="color:#FFF">My Profile</h6></a>
+			<a class="waves-effect waves-teal btn-flat"><h6 style="color:#FFF">LOG OUT</h6></a>
+	 	</div>
+	 		
+		
 			
-			<div class="input-field ">
-				<input id="input_project_tags" type="text" placeholder="Tags">
-			</div>
-
-			<div class="input-field s12">
-				<textarea id="input_project_description"
-					class="materialize-textarea" length="120" placeholder="Description"></textarea>
-
-			</div>
-
-			<a class="waves-effect waves-light btn" id="id_button_post_project">Post
-				Project</a>
-
-		</form>
+			
 	</div>
+ 
 	
-	<div>
+	
+	<div style="clear:both;">
 		<div style="width:60%; float:left;"">
 			<div class="input-field ">
 					<input id="input_search_projects" type="text" placeholder="Search Project">
@@ -67,5 +60,31 @@
 		
 	</div>
 
+
+	<div  id="post_project" class="card-panel teal lighten-2" style="clear:both;">
+		 <div>
+      		
+			<form>
+	
+				<div class="input-field ">
+					<input id="input_project_title" type="text" placeholder="Title">
+				</div>
+				
+				<div class="input-field ">
+					<input id="input_project_tags" type="text" placeholder="Tags">
+				</div>
+	
+				<div class="input-field s12">
+					<textarea id="input_project_description"
+						class="materialize-textarea" length="120" placeholder="Description"></textarea>
+				</div>
+	
+				<div class="modal-footer">
+			      <a id="id_button_post_project" class=" modal-action modal-close waves-effect waves-green btn-flat">Post Project</a>
+			    </div>
+				
+			</form>
+		</div>
+	</div>
 </body>
 </html>

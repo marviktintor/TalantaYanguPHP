@@ -25,7 +25,6 @@ window.onload = function() {
 
 function init(){
 	setCache(SELECTED_PROJECT, "-1");
-	hideElement('post_project');
 	
 	setEventListeners();
 	fillForm();
@@ -56,6 +55,7 @@ function fillForm(){
 function addButtonEventListeners(){
 	
 	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
+	getElement('id_button_post_project').addEventListener('click',post_project,false);
 	
 }
 
