@@ -1,6 +1,4 @@
-/**
- * 
- */
+FETCHED_PROJECT_HTML = "fetched_project_html";
 
 INTENT_POST_PROJECT = "post_project";
 INTENT_FETCH_PROJECTS = "fetch_projects";
@@ -78,9 +76,14 @@ function search_project(){
 	
 }
 function view_project(project_id){
-	setCache(SELECTED_PROJECT, project_id);
-	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
-	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_SELECTED_PROJECT);
+	if(project_id != ""+getCache(SELECTED_PROJECT)){
+		setCache(SELECTED_PROJECT, project_id);
+		params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
+		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_SELECTED_PROJECT);
+	}else{ 
+		setElementHtml('selected_project_comments', getCache(FETCHED_PROJECT_HTML));
+	}
+	
 }
 function fetch_projects(){
 	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_PROJECTS
@@ -219,9 +222,12 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 			}
 			if (intent == INTENT_SEARCH_PROJECT) { 
 				setElementHtml('posted_projects', request.responseText);
+				setElementHtml('selected_project_comments','');
 			}
 			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
-				setElementHtml('selected_project_comments', request.responseText);
+				var fetchedProjectHtml = request.responseText;
+				setElementHtml('selected_project_comments', fetchedProjectHtml);
+				setCache(FETCHED_PROJECT_HTML, fetchedProjectHtml);
 				fetch_projects();
 			}
 			
