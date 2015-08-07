@@ -140,11 +140,15 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 						<div>
 							<div >
 								<h6>Employment History</h6>
+								<label><a class="waves-effect waves-light btn" id="id_button_toggle_work_info">Add Work Info</a></label>
 								<div>'.$employment_info.'</div>
+							'.get_add_work_info_view().'
 							</div>
 							<div >
 								<h6>School History</h6>
+								<label><a class="waves-effect waves-light btn" id="id_button_toggle_school_info">Add School Info</a></label>
 								<div>'.$school_info.'</div>
+								'.get_add_school_info_view().'
 							</div>
 						</div>
 					</div>
@@ -158,6 +162,47 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 					</footer>
 				</div>';
 	}
+	
+	function get_add_school_info_view(){
+		return '<div id="id_view_add_school_info" class="card hoverable " style="padding:20px;">
+									<input id="input_school_info_school_name" type="text" placeholder="School name" >
+									<input id="input_school_info_school_county" type="text" placeholder="County" >
+									<input id="input_school_info_course" type="text" placeholder="Course" >
+				
+									<div style="width:100%;">
+										<div style="float:left;  margin:1%; width:48%;">
+											<label>Join Date</label>
+											<input id="input_school_info_school_join" type="date" placeholder="Join" >
+										</div>
+										<div style="float:right; margin:1%; width:48%;">
+											<label>Leave Date</label>
+											<input id="input_school_info_school_leave" type="date" class="datepicker "/>
+										</div>
+									
+									</div>
+									<a class="waves-effect waves-light btn" id="id_button_add_school_info">Add School Info</a>
+								</div>';
+	}
+	
+	function get_add_work_info_view(){
+		 return '<div id="id_view_add_employment_info" class="card hoverable " style="padding:20px;">
+	<input id="input_school_info_company_name" type="text" placeholder="Company name" >
+	<input id="input_school_info_company_county" type="text" placeholder="County" >
+	<input id="input_school_info_role" type="text" placeholder="Role" >
+				
+		<div style="width:100%;">
+			<div style="float:left;  margin:1%; width:48%;">
+				<label>Join Date</label>
+				<input id="input_workl_info_company_join" type="date" placeholder="Join" >
+			</div>
+			<div style="float:right; margin:1%; width:48%;">
+				<label>Leave Date</label>
+				<input id="input_work_info_comapny_leave" type="date" class="datepicker "/>
+			</div>
+			<a class="waves-effect waves-light btn" id="id_button_add_work_info">Add Work Info</a>
+		</div>
+</div>';
+	} 
 	function get_user_school_info($id_users){
 
 		$table = "school_info";
