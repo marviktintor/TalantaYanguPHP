@@ -188,7 +188,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		if(count($school_info)==0){
 			$school_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
-						<h5>'.get_user_username($id_users).' has not posted any school Info! </h5>
+						<h5 style="color:#FFF;">'.get_user_username($id_users).' has not posted any school Info! </h5>
 					</div>';
 		}
 		
@@ -220,7 +220,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		}
 		if(count($employment_info)==0){
 			$employment_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
-						<h5>'.get_user_username($id_user).' has not posted any employment Info! </h5>
+						<h5 style="color:#FFF;">'.get_user_username($id_user).' has not posted any employment Info! </h5>
 					</div>';
 		}
 	

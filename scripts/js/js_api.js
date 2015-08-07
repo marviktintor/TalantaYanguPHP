@@ -10,6 +10,8 @@ URL_WORKER ="http://localhost/talantayanguphp/worker.php";
 
 SELECTED_USER_PROFILE="selected_user_profile";
 URL_PERSON_PROFILE = "user_profile.html";
+URL_MY_PROFILE = "my_profile.html";
+MY_USER_ID = "my_user_id";
 
 //Actions
 ACTION_QUERY = "query";

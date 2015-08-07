@@ -58,6 +58,7 @@ function addButtonEventListeners(){
 	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
 	getElement('id_button_post_project').addEventListener('click',post_project,false);
 	getElement('button_toggle_post_project').addEventListener('click',toggle_post_project,false);
+	getElement('view_my_profile').addEventListener('click',view_my_profile,false);
 	
 }
 
@@ -68,12 +69,22 @@ function addInputEventListeners(){
 
 function toggle_post_project(){
 	
-	if(getElement('post_project').style.display == 'none'){
-	}
-	if(getElement('post_project').style.display == 'block'){
-		hideElement('post_project');
+	if(getElement('post_project').style.display == 'block'){ 
+		document.getElementById('post_project').style.display = 'none';
+		document.getElementById('div_leave_comments').style.display = 'block';
+		return;
 	}
 	
+	if(getElement('post_project').style.display == 'none'){
+		document.getElementById('post_project').style.display = 'block';
+		document.getElementById('div_leave_comments').style.display = 'none';
+		return;
+	}
+	
+	if(getElement('post_project').style.display == ''){
+		document.getElementById('post_project').style.display = 'block';
+		document.getElementById('div_leave_comments').style.display = 'none';
+	}
 	
 }
 function search_project(){
@@ -88,6 +99,10 @@ function search_project(){
 	
 }
 function view_project(project_id){
+	
+	document.getElementById('post_project').style.display = 'none';
+	document.getElementById('div_leave_comments').style.display = 'block';
+	
 	if(project_id != ""+getCache(SELECTED_PROJECT)){
 		setCache(SELECTED_PROJECT, project_id);
 		params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
@@ -116,6 +131,20 @@ function post_project_comments(){
 		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_LEAVE_PROJECT_COMMENT);
 		
 	}else { alert("Failed!Enter your comment(s)");}
+}
+
+function view_my_profile(){
+	
+	
+	
+	var cached_user = getCache(CACHE_USER);
+	if(cached_user == null){
+		window.open("register.html", "_blank", "width=100;height=100;");
+		return;
+	}else{
+		setCache(MY_USER_ID, getCache(CACHE_USER));
+		window.open(URL_MY_PROFILE,"_self");
+	}
 }
 function post_project(){
 	
