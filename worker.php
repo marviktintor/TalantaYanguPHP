@@ -16,6 +16,8 @@ define ( 'INTENT_LEAVE_PROJECT_COMMENT', 'leave_project_comments' );
 define ( 'INTENT_VIEW_PERSON_PROFILE', 'view_person_profile' );
 define ( 'INTENT_SEARCH_PROJECT', 'search_project' );
 
+define ( 'INTENT_ADD_SCHOOL_INFO', 'add_school_info' );
+define ( 'INTENT_ADD_WORK_INFO', 'add_work_info' );
 
 
 define ( 'INTENT_LIKE_PROJECT', 'like_project' );
@@ -65,6 +67,13 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		if ($intent == INTENT_FAVORITE_COMMENT) {
 			favorite_project_comment();
 		}
+
+		if ($intent == INTENT_ADD_SCHOOL_INFO) {
+			addSchoolInfo();
+		}
+		if ($intent == INTENT_ADD_WORK_INFO) {
+			addWorkInfo();
+		}
 	}
 	if ($action == ACTION_QUERY) {
 		if ($intent == INTENT_FETCH_PROJECTS) {
@@ -84,6 +93,77 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 }else{
 		echo "Cannot hack into the server";
 	}
+	
+	function addSchoolInfo(){
+		
+		$school_name = $_POST['school_name'];
+		$school_county = $_POST['school_county'];
+		
+		$table = "schools";
+		$columns= array("school_name", "county");
+		$records = array($school_name,$school_county);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 0){
+			$dbutils->insert_records($table, $columns, $records);
+		}
+		
+		
+		$schools = $dbutils->query($table, $columns, $records);
+		$id_school = $schools[0]['id_school'];
+		
+		
+		$user_profile = $_POST['user_profile'];
+		$course = $_POST['course'];
+		$join_date = $_POST['join_date'];
+		$leave_date = $_POST['leave_date'];
+		
+		$table = "school_info";
+		$columns= array("id_school", "id_user", "join_date", "course", "leave_date");
+		$records = array($id_school,$user_profile,$join_date,$course,$leave_date);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 0){
+			$dbutils->insert_records($table, $columns, $records);
+		}
+		
+	}
+	function addWorkInfo(){
+		
+		$company_name = $_POST['company_name'];
+		$company_county = $_POST['company_county'];
+		
+		$table = "company";
+		$columns= array("company_name", "county");
+		$records = array($company_name,$company_county);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 0){
+			$dbutils->insert_records($table, $columns, $records);
+		}
+		
+		$companies = $dbutils->query($table, $columns, $records);
+		$id_company = $companies[0]['id_company'];
+		
+		
+		$user_profile = $_POST['user_profile'];
+		$work_role = $_POST['work_role'];
+		$join_date = $_POST['join_date'];
+		$leave_date = $_POST['leave_date'];
+		
+		$table = "employment_info";
+		$columns= array("id_company", "id_user", "start_date", "stop_date", "role", "county");
+		$records = array($id_company,$user_profile,$join_date,$leave_date,$work_role,$company_county);
+		$dbutils = new db_utils();
+		
+		if($dbutils->is_exists($table, $columns, $records) == 0){
+			$dbutils->insert_records($table, $columns, $records);
+		}
+		
+		
+	}
+	
+
 	
 	function show_selected_user_profile(){
 		$user_id = $_POST['selected_user_id'];
@@ -116,7 +196,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	function print_user_profile($id_users,$user_type,$firstname,$lastname,$username,$email,$phone,$commit_time,$school_info,$employment_info,$social_media_info){
 		echo '<header id="header" style="background: url(\'images/victor_mwenda.jpg\')"></header>
-				<div id="main">
+				<div id="main"><span id="test"></span>
 					<div id="one" > <h5>'.$firstname.' '.$lastname.'</h5>
 						<header class="major"></header>
 					</div>	
@@ -140,13 +220,13 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 						<div>
 							<div >
 								<h6>Employment History</h6>
-								<label><a class="waves-effect waves-light btn" id="id_button_toggle_work_info">Add Work Info</a></label>
+								<label><a class="waves-effect waves-light btn" id="id_button_add_toggle_work_info">Add Work Info</a></label>
 								<div>'.$employment_info.'</div>
 							'.get_add_work_info_view().'
 							</div>
 							<div >
 								<h6>School History</h6>
-								<label><a class="waves-effect waves-light btn" id="id_button_toggle_school_info">Add School Info</a></label>
+								<label><a class="waves-effect waves-light btn" id="id_button_toggle_add_school_info">Add School Info</a></label>
 								<div>'.$school_info.'</div>
 								'.get_add_school_info_view().'
 							</div>
@@ -164,7 +244,8 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	
 	function get_add_school_info_view(){
-		return '<div id="id_view_add_school_info" class="card hoverable " style="padding:20px;">
+		return '<div id="id_view_add_school_info" class="card hoverable " style="padding:20px;display:none;">
+				
 									<input id="input_school_info_school_name" type="text" placeholder="School name" >
 									<input id="input_school_info_school_county" type="text" placeholder="County" >
 									<input id="input_school_info_course" type="text" placeholder="Course" >
@@ -185,23 +266,24 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	
 	function get_add_work_info_view(){
-		 return '<div id="id_view_add_employment_info" class="card hoverable " style="padding:20px;">
-	<input id="input_school_info_company_name" type="text" placeholder="Company name" >
-	<input id="input_school_info_company_county" type="text" placeholder="County" >
-	<input id="input_school_info_role" type="text" placeholder="Role" >
+		 return '<div id="id_view_add_employment_info" class="card hoverable " style="padding:20px;display:none;">
+		 		
+	<input id="input_work_info_company_name" type="text" placeholder="Company name" >
+	<input id="input_work_info_company_county" type="text" placeholder="County" >
+	<input id="input_work_info_role" type="text" placeholder="Role" >
 				
 		<div style="width:100%;">
 			<div style="float:left;  margin:1%; width:48%;">
 				<label>Join Date</label>
-				<input id="input_workl_info_company_join" type="date" placeholder="Join" >
+				<input id="input_work_info_company_join" type="date" placeholder="Join" >
 			</div>
 			<div style="float:right; margin:1%; width:48%;">
 				<label>Leave Date</label>
-				<input id="input_work_info_comapny_leave" type="date" class="datepicker "/>
+				<input id="input_work_info_company_leave" type="date" class="datepicker "/>
 			</div>
-			<a class="waves-effect waves-light btn" id="id_button_add_work_info">Add Work Info</a>
 		</div>
-</div>';
+		 <a class="waves-effect waves-light btn" id="id_button_add_work_info">Add Work Info</a>
+	</div>';
 	} 
 	function get_user_school_info($id_users){
 
@@ -243,33 +325,35 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	function get_employment_info($id_user){
 		
-		$table = "school_info";
+		$table = "employment_info";
 		$columns= array("id_user");
 		$records = array($id_user);
 		$dbutils = new db_utils();
 		
-		$employment_info = $dbutils->query($table, $columns, $records);
+		$employment_info = "";
 		
-		$employment_infos = "";
+		$employment_infos = $dbutils->query($table, $columns, $records);
 		
-		if(count($employment_info)>0){
-			for($i = 0;$i <count($employment_info);$i++){
-				$id_company= $employment_info[$i]['id_company='];
-				$id_user= $employment_info[$i]['id_user'];
-				$start_date= $employment_info[$i]['start_date'];
-				$stop_date= $employment_info[$i]['stop_date'];
-				$role= $employment_info[$i]['role'];
-				$county = $employment_info[$i]['county'];
+		if(count($employment_infos)>0){
+			for($i = 0;$i <count($employment_infos);$i++){
+				$id_company= $employment_infos[$i]['id_company'];
+				$id_user= $employment_infos[$i]['id_user'];
+				$start_date= $employment_infos[$i]['start_date'];
+				$stop_date= $employment_infos[$i]['stop_date'];
+				$role= $employment_infos[$i]['role'];
+				$county = $employment_infos[$i]['county'];
+				
+				$employment_info .= populate_employment_info($id_company,$start_date,$stop_date,$role,$county);
 			}
 			
 		}
-		if(count($employment_info)==0){
+		if(count($employment_infos)==0){
 			$employment_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
 						<h5 style="color:#FFF;">'.get_user_username($id_user).' has not posted any employment Info! </h5>
 					</div>';
 		}
 	
-		return $employment_infos;
+		return $employment_info;
 	}
 	function get_social_media_info($id_users){
 		$social_media ='<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
@@ -282,6 +366,15 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 				<label class="right">'.$join_date.' - '.$leave_date.'</label><br />
 				<span>'.$course.'</span><br />
 				<label class="left">'.$school_name.'</label><br />
+				</div>';
+		
+		
+	}
+	function populate_employment_info($id_company,$start_date,$stop_date,$role,$county){
+		return '<div class="card hoverable " style="padding:10px; margin:10px;">
+				<label class="right">'.$start_date.' - '.$stop_date.'</label><br />
+				<span>'.$role.'</span><br />
+				<label class="left">'.$county.'</label><br />
 				</div>';
 		
 		
