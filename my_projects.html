@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Home</title>
+
+<script type="text/javascript" src="scripts/js/js_api.js"></script>
+<script type="text/javascript" src="scripts/js/scripts_myprojects.js"></script>
+
+
+
+<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link type="text/css" rel="stylesheet" href="project/custom.css" />
+</head>
+<body>
+
+	 <div class="card-panel teal lighten-2" style="margin-top:-10px; height:70px; position:relative;">
+	 	<div class="left">
+	 		<a  class="waves-effect waves-teal btn-flat modal-trigger"><h6 style="color:#FFF">MY PROJECTS</h6></a>
+	 	</div>
+	 	<div class="right">
+	 		<a class="waves-effect waves-teal btn-flat" id="my_profile"><h6 style="color:#FFF">MY PROFILE</h6></a>
+			<a class="waves-effect waves-teal btn-flat"><h6 style="color:#FFF">LOG OUT</h6></a>
+	 	</div>
+	 		
+		
+			
+			
+	</div>
+ 
+	
+	
+	
+	<div style="clear:both;">
+		<div style="width:60%; float:left;"">
+			
+			
+			<div class="input-field " style="width:60%;">
+					
+					<select >
+						<option value="1">All Projects</option>
+						<option value="2">Most Viewed</option>
+						<option value="3">Most Favorated</option>
+						<option value="4">Most Liked</option>
+						<option value="5">Most Unliked</option>
+					</select>
+					<input id="input_search_projects" type="text" placeholder="Search Project" >
+			</div>
+			<div id="posted_projects"  style="clear:both;">
+		
+			</div>
+		</div>
+			
+	
+		<div id="project_comments" style="width:40%; float:left; padding:10px;">
+			
+			<div  id="post_project" class="card-panel white" style="clear:both;" >
+			 <div  >
+		      		
+					<form>
+						<input id="input_project_title" type="text" placeholder="Title" class="left">
+						<input id="input_project_tags" type="text" placeholder="Tags" class="left">
+						<textarea id="input_project_description"
+								class="materialize-textarea" length="120" placeholder="Description" class="left"></textarea>
+						<a id="id_button_post_project" class=" modal-action modal-close waves-effect waves-green btn-flat">Post Project</a>
+					</form>
+				</div>
+			</div>
+			<div id="div_leave_comments">
+			
+				<div class="input-field col s6">
+	          		<input placeholder="Leave a Comment " id="input_leave_comment" type="text" class="validate">
+	      		</div>
+	
+				<button id="id_button_leave_comment" class="btn waves-effect waves-light center" type="submit" name="action">Leave Comment
+				   </button>
+			</div>
+		
+			<div id="selected_project_comments" >
+			
+			</div>
+		</div>
+		
+	</div>
+
+
+	
+</body>
+</html>

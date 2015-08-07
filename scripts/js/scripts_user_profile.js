@@ -36,6 +36,8 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 			if (intent == INTENT_VIEW_PERSON_PROFILE) { 
 				
 				setElementHtml('id_user_profile_body', request.responseText);
+				hideElement('id_button_toggle_add_school_info');
+				hideElement('id_button_add_toggle_work_info');
 			}
 		}
 

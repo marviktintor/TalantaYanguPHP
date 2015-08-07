@@ -14,12 +14,37 @@ window.onload = function(){
 }
 
 function setEventListeners(){
-	getElement('id_button_toggle_add_school_info').addEventListener('click',toggle_add_school_info,false);
-	getElement('id_button_add_toggle_work_info').addEventListener('click',toggle_add_work_info,false);
+	if(document.getElementById('id_button_toggle_add_school_info') != null){
+		getElement('id_button_toggle_add_school_info').addEventListener('click',toggle_add_school_info,false);
+	}
+	if(document.getElementById('id_button_add_toggle_work_info') != null){
+		getElement('id_button_add_toggle_work_info').addEventListener('click',toggle_add_work_info,false);
+	}
+	
+	if(document.getElementById('id_button_add_school_info_hide') != null){
+		getElement('id_button_add_school_info_hide').addEventListener('click',hide_add_school_info,false);
+	}
+	if(document.getElementById('id_button_add_work_info_hide') != null){
+		getElement('id_button_add_work_info_hide').addEventListener('click',hide_add_work_info,false);
+	}
+	
+	
+	
+	
 	getElement('id_button_add_work_info').addEventListener('click',add_work_info,false);
 	getElement('id_button_add_school_info').addEventListener('click',add_school_info,false);
+	getElement('view_my_projects').addEventListener('click',view_my_projects,false);
 }
 
+function view_my_projects (){
+	window.open("my_projects.html", "_self");
+}
+function hide_add_school_info(){
+	hideElement('id_view_add_school_info');
+}
+function hide_add_work_info(){
+	hideElement('id_view_add_employment_info');
+}
 function add_work_info() {
 
 	var company_name = getElementValue('input_work_info_company_name');

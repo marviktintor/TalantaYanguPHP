@@ -262,6 +262,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 									
 									</div>
 									<a class="waves-effect waves-light btn" id="id_button_add_school_info">Add School Info</a>
+									<a class="waves-effect waves-light btn" id="id_button_add_school_info_hide">Hide</a>
 								</div>';
 	}
 	
@@ -283,6 +284,8 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 			</div>
 		</div>
 		 <a class="waves-effect waves-light btn" id="id_button_add_work_info">Add Work Info</a>
+		  <a class="waves-effect waves-light btn" id="id_button_add_work_info_hide">Hide</a>
+		 		
 	</div>';
 	} 
 	function get_user_school_info($id_users){
