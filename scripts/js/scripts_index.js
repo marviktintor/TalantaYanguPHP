@@ -25,6 +25,7 @@ window.onload = function() {
 
 function init(){
 	setCache(SELECTED_PROJECT, "-1");
+	hideElement('post_project');
 	
 	setEventListeners();
 	fillForm();
@@ -56,6 +57,7 @@ function addButtonEventListeners(){
 	
 	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
 	getElement('id_button_post_project').addEventListener('click',post_project,false);
+	getElement('button_toggle_post_project').addEventListener('click',toggle_post_project,false);
 	
 }
 
@@ -64,6 +66,16 @@ function addInputEventListeners(){
 	
 }
 
+function toggle_post_project(){
+	
+	if(getElement('post_project').style.display == 'none'){
+	}
+	if(getElement('post_project').style.display == 'block'){
+		hideElement('post_project');
+	}
+	
+	
+}
 function search_project(){
 	var searchKey = getElementValue('input_search_projects');
 	params = "action="+ACTION_QUERY+"&intent="+INTENT_SEARCH_PROJECT+"&search_key="+searchKey;

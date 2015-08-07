@@ -17,7 +17,7 @@
 
 	 <div class="card-panel teal lighten-2" style="margin-top:-10px; height:70px;">
 	 	<div class="left">
-	 		<a href="#post_project" class="waves-effect waves-teal btn-flat modal-trigger"><h6 style="color:#FFF">POST PROJECT</h6></a>
+	 		<a id="button_toggle_post_project" class="waves-effect waves-teal btn-flat modal-trigger"><h6 style="color:#FFF">POST PROJECT</h6></a>
 	 	</div>
 	 	<div class="right">
 	 		<a class="waves-effect waves-teal btn-flat"><h6 style="color:#FFF">My Profile</h6></a>
@@ -29,6 +29,7 @@
 			
 	</div>
  
+	
 	
 	
 	<div style="clear:both;">
@@ -43,6 +44,19 @@
 			
 	
 		<div id="project_comments" style="width:40%; float:left; padding:10px;">
+			
+			<div  id="post_project" class="card-panel white" style="clear:both;" >
+			 <div  >
+		      		
+					<form>
+						<input id="input_project_title" type="text" placeholder="Title" class="left">
+						<input id="input_project_tags" type="text" placeholder="Tags" class="left">
+						<textarea id="input_project_description"
+								class="materialize-textarea" length="120" placeholder="Description" class="left"></textarea>
+						<a id="id_button_post_project" class=" modal-action modal-close waves-effect waves-green btn-flat">Post Project</a>
+					</form>
+				</div>
+			</div>
 			<div id="div_leave_comments">
 			
 				<div class="input-field col s6">
@@ -61,30 +75,6 @@
 	</div>
 
 
-	<div  id="post_project" class="card-panel teal lighten-2" style="clear:both;">
-		 <div>
-      		
-			<form>
 	
-				<div class="input-field ">
-					<input id="input_project_title" type="text" placeholder="Title">
-				</div>
-				
-				<div class="input-field ">
-					<input id="input_project_tags" type="text" placeholder="Tags">
-				</div>
-	
-				<div class="input-field s12">
-					<textarea id="input_project_description"
-						class="materialize-textarea" length="120" placeholder="Description"></textarea>
-				</div>
-	
-				<div class="modal-footer">
-			      <a id="id_button_post_project" class=" modal-action modal-close waves-effect waves-green btn-flat">Post Project</a>
-			    </div>
-				
-			</form>
-		</div>
-	</div>
 </body>
 </html>
