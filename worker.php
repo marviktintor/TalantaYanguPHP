@@ -567,44 +567,45 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	
 	function analyse_project_data($project_id){
 		
-		echo analyse_project_views($project_id);
-		echo analyse_project_favorites($project_id);
-		echo analyse_project_likes($project_id);
-		echo analyse_project_unlikes($project_id);
+		echo '<div class="card hoverable" style="padding:10px;">'.analyse_project_views($project_id).'</div>';
+		echo '<div class="card hoverable" style="padding:10px;> "'.analyse_project_favorites($project_id).'</div>';
+		echo '<div class="card hoverable" style="padding:10px;>"'.analyse_project_likes($project_id).'</div>';
+		echo '<div class="card hoverable" style="padding:10px;>"'.analyse_project_unlikes($project_id).'</div>';
+		echo '<span>Project Comments ('.get_project_comments_count($project_id).')</span><hr />';
 		analyse_project_comments($project_id);
 	}
 	function analyse_project_views($project_id) {
-		/* //`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
-		$project_likes_view = "";
+		 //`id_project_views`, `id_project`, `id_user`, `count_views`, `commit_time`
+		$impressions_view = "";
 		
-		$table = "project_impressions";
-		$columns = array("id_project","likes");
-		$records = array($project_id,"1");
+		$table = "project_views";
+		$columns = array("id_project");
+		$records = array($project_id);
 		$dbutils = new db_utils();
 		
-		$total_likes = $dbutils->is_exists($table, $columns, $records);
+		$total_views = $dbutils->is_exists($table, $columns, $records);
 		
 		
-		$project_likes = $dbutils->query($table, $columns, $records);
-		if(count($project_likes)>0){
-			$project_likes_view .= '<span>Project Likes</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
-			for($i = 0;$i<count($project_likes);$i++){
-				$id_user = $project_likes[$i]['id_user'];
+		$project_views = $dbutils->query($table, $columns, $records);
+		if(count($project_views)>0){
+			$impressions_view .= '<span>Project Views ('.$total_views.')</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Views</th></tr></thead>';
+			for($i = 0;$i<count($project_views);$i++){
+				$id_user = $project_views[$i]['id_user'];
 				$username = get_user_username($id_user);
-				$time = get_human_friendly_time($project_likes[$i]['commit_time']);
-				$project_likes_view .= print_impressions_table($i + 1,$username,$time);
+				$views = $project_views[$i]['count_views'];
+				$impressions_view .= print_impressions_table($i + 1,$username,$views);
 			}
-			$project_likes_view .= "</table>";
+			$impressions_view .= "</table>";
 		}
-		if(count($project_likes)==0){
-			$project_likes_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has no likes</h5></div>';
+		if(count($project_views)==0){
+			$impressions_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has no likes</h5></div>';
 		}
 		
-		return $project_likes_view; */
+		return $impressions_view; 
 	}
 	function analyse_project_favorites($project_id) {
 		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
-		$project_likes_view = "";
+		$impressions_view = "";
 		
 		$table = "project_impressions";
 		$columns = array("id_project","favorites");
@@ -615,26 +616,29 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		
 		$project_favorites = $dbutils->query($table, $columns, $records);
+		$impressions_view .= '<span>Project Favorites</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 		if(count($project_favorites)>0){
-			$project_likes_view .= '<span>Project Favorites</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 			for($i = 0;$i<count($project_favorites);$i++){
+				echo '<tbody>';
 				$id_user = $project_favorites[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$time = get_human_friendly_time($project_favorites[$i]['commit_time']);
-				$project_likes_view .= print_impressions_table($i + 1,$username,$time);
+				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				echo '</tbody>';
 			}
-			$project_likes_view .= "</table>";
-		}
-		if(count($project_favorites)==0){
-			$project_likes_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has not been favorated</h5></div>';
 		}
 		
-		return $project_likes_view;
+		$impressions_view .= "</table>";
+		if(count($project_favorites)==0){
+			$impressions_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has not been favorated</h5></div>';
+		}
+		
+		return $impressions_view;
 	}
 	function analyse_project_likes($project_id) {
 		
 		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
-		$project_likes_view = "";
+		$impressions_view = "";
 		
 		$table = "project_impressions";
 		$columns = array("id_project","likes");
@@ -645,27 +649,63 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		
 		$project_likes = $dbutils->query($table, $columns, $records);
+		$impressions_view .= '<span>Project Likes</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
+			
 		if(count($project_likes)>0){
-			$project_likes_view .= '<span>Project Likes</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 			for($i = 0;$i<count($project_likes);$i++){
+				echo '<tbody>';
 				$id_user = $project_likes[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$time = get_human_friendly_time($project_likes[$i]['commit_time']);
-				$project_likes_view .= print_impressions_table($i + 1,$username,$time);
+				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				echo '</tbody>';
 			}
-			$project_likes_view .= "</table>";
+			
 		}
+		$impressions_view .= "</table>";
 		if(count($project_likes)==0){
-			$project_likes_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has no likes</h5></div>';
+			$impressions_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has no likes</h5></div>';
 		}
 		
-		return $project_likes_view;
+		return $impressions_view;
 	}
 	
 	function print_impressions_table($index,$username,$time){
 		return '<tr><td>'.$index.'</td><td>'.$username.'</td><td>'.$time.'</td></tr>';
 	}
 	function analyse_project_unlikes($project_id) {
+
+		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
+		$impressions_view = "";
+		
+		$table = "project_impressions";
+		$columns = array("id_project","unlikes");
+		$records = array($project_id,"1");
+		$dbutils = new db_utils();
+		
+		$total_likes = $dbutils->is_exists($table, $columns, $records);
+		
+		
+		$project_likes = $dbutils->query($table, $columns, $records);
+		$impressions_view .= '<span>Project Unlikes</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
+			
+		if(count($project_likes)>0){
+			for($i = 0;$i<count($project_likes);$i++){
+				echo '<tbody>';
+				$id_user = $project_likes[$i]['id_user'];
+				$username = get_user_username($id_user);
+				$time = get_human_friendly_time($project_likes[$i]['commit_time']);
+				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				echo '</tbody>';
+			}
+			
+		}
+		$impressions_view .= "</table>";
+		if(count($project_likes)==0){
+			$impressions_view .= '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card teal lighten-2" ><h5> This Project has no unlikes</h5></div>';
+		}
+		
+		return $impressions_view;
 	}
 	function analyse_project_comments($project_id) {
 	}

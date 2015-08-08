@@ -28,7 +28,7 @@ function init(){
 	hideElement('post_project');
 	
 	setEventListeners();
-	fillForm();
+	//fillForm();
 	fetch_projects();
 }
 function setEventListeners() {
