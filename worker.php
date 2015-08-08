@@ -840,17 +840,19 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	
 function search_projects($myproject = false){
+	
 	fetch_projects(true,$myproject);
 }
 function fetch_projects($search,$myprojects = false){
 	$dbutils = new db_utils();
 	$table = "projects";
 	
-	if(isset($_POST['my_user_id'])){$id_user = $_POST['my_user_id'];}
+	//if(isset($_POST['my_user_id'])){$id_user = $_POST['my_user_id'];}
+	
 	
 	$projects = null;
 	
-	if($search){
+	if($search){ 
 		$search_key = $_POST['search_key'];
 		
 		$columns = array();
@@ -858,8 +860,8 @@ function fetch_projects($search,$myprojects = false){
 		
 		$user_ids = opt_user_id($search_key);
 		if(count($user_ids) == 0){
-			$columns = array("project_title", "project_tags", "project_desc","id_user");
-			$records= array($search_key,$search_key,$search_key,$id_user);
+			$columns = array("project_title", "project_tags", "project_desc");
+			$records= array($search_key,$search_key,$search_key);
 			$projects = $dbutils->search($table, $columns, $records);
 		}
 		if(count($user_ids) > 0){
@@ -877,7 +879,7 @@ function fetch_projects($search,$myprojects = false){
 	}else{
 		$columns = array(); $records= array();
 		if($myprojects){
-			$columns = array("id_user"); $records= array($id_user);
+			//$columns = array("id_user"); $records= array($id_user);
 		}
 		
 		$projects = $dbutils->query($table, $columns, $records);
