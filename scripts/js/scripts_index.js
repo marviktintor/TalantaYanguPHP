@@ -267,7 +267,7 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 				setElementHtml('posted_projects', request.responseText);
 				setElementHtml('selected_project_comments','');
 			}
-			if (intent == INTENT_FETCH_SELECTED_PROJECT) { alert("HERE");
+			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
 				var fetchedProjectHtml = request.responseText;
 				setElementHtml('selected_project_comments', fetchedProjectHtml);
 				setCache(FETCHED_PROJECT_HTML, fetchedProjectHtml);
