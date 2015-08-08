@@ -6,7 +6,7 @@ METHOD_GET = "GET";
 
 CACHE_USER = "cached_user";
 SELECTED_PROJECT = "selected_project";
-URL_WORKER ="http://localhost/talantayanguphp/worker.php";
+URL_WORKER ="worker.php";
 
 SELECTED_USER_PROFILE="selected_user_profile";
 URL_PERSON_PROFILE = "user_profile.html";
