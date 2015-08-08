@@ -81,7 +81,7 @@ function view_project(project_id){
 	document.getElementById('post_project').style.display = 'none';
 	document.getElementById('div_leave_comments').style.display = 'block';
 	
-	if(project_id != ""+getCache(MY_SELECTED_PROJECT)){
+	if(/*project_id != ""+getCache(MY_SELECTED_PROJECT)*/true){
 		setCache(MY_SELECTED_PROJECT, project_id);
 		params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_MY_SELECTED_PROJECT+"&id_project="+project_id+"&my_user_id="+getCache(MY_USER_ID);
 		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_MY_SELECTED_PROJECT);
@@ -173,7 +173,10 @@ function is_valid_project(tags, title, desc) {
 	return formValid;
 }
 
-
+function view_user_profile(id_user){
+	setCache(SELECTED_USER_PROFILE, id_user);
+	window.open(URL_PERSON_PROFILE,"_blank","width=100;height=100");
+}
  
 
 function like_project_comment(id_comment){
@@ -239,7 +242,7 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 		if (action == ACTION_QUERY) {
 			if (intent == INTENT_FETCH_MY_PROJECTS) {
 				setElementHtml('posted_projects', request.responseText);
-				view_project(getCache(MY_SELECTED_PROJECT));
+				
 				
 			}
 			if (intent == INTENT_SEARCH_MY_PROJECT) { 

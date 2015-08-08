@@ -8,10 +8,14 @@ INTENT_LOGIN = "login";
 
 window.onload = function() {
 
+	
+	init();
+}
+function init(){
 	setEventListeners();
 	//fillForm();
+	hideElement('page_login');
 }
-
 
 function setEventListeners() {
 

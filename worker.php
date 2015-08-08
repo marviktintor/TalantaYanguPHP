@@ -32,7 +32,7 @@ define ( 'INTENT_UNLIKE_COMMENT', 'unlike_comment' );
 define ( 'INTENT_FAVORITE_COMMENT', 'favorite_comment' );
 
 define ( 'INTENT_SEARCH', 'search' );
-
+define ( 'INTENT_SEARCH_MY_PROJECT', 'search_my_projects' );
 
 
 if(isset($_POST['action'])  && isset($_POST['intent'])){
@@ -61,7 +61,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		if ($intent == INTENT_FAVORITE_PROJECT) {
 			favorite_project();
 		}
-		if ($intent == INTENT_LIKE_COMMENT) {
+		if ($intent == INTENT_LIKE_COMMENT) { 
 			like_project_comment(false);
 		}
 		if ($intent == INTENT_UNLIKE_COMMENT) {
@@ -87,6 +87,9 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		}
 		if ($intent == INTENT_SEARCH_PROJECT) {
 			search_projects();
+		}
+		if ($intent == INTENT_SEARCH_MY_PROJECT) {
+			search_projects(true);
 		}
 		if ($intent == INTENT_FETCH_SELECTED_PROJECT) {
 			fetch_project_infos();
@@ -421,7 +424,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		$id_comment = $_POST['id_comment'];
 		$user = $_POST['user'];
-		$comment = $_POST['comment'];
+		/* $comment = $_POST['comment']; */
 		$like = 1;
 		
 		$table = "comments_impressions";
@@ -444,7 +447,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	function unlike_project_comment($check_unlike){
 		$id_comment = $_POST['id_comment'];
 		$user = $_POST['user'];
-		$comment = $_POST['comment'];
+		/* $comment = $_POST['comment']; */
 		$unlike = 1;
 		
 		$table = "comments_impressions";
@@ -464,7 +467,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	function favorite_project_comment(){
 		$id_comment = $_POST['id_comment'];
 		$user = $_POST['user'];
-		$comment = $_POST['comment'];
+		/* $comment = $_POST['comment']; */
 		$favorites = 1;
 		
 		$table = "comments_impressions";
@@ -575,7 +578,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		analyse_project_comments($project_id);
 	}
 	function analyse_project_views($project_id) {
-		 //`id_project_views`, `id_project`, `id_user`, `count_views`, `commit_time`
+		 
 		$impressions_view = "";
 		
 		$table = "project_views";
@@ -583,17 +586,17 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		$records = array($project_id);
 		$dbutils = new db_utils();
 		
-		$total_views = $dbutils->is_exists($table, $columns, $records);
+		$total_views = get_project_views($project_id);
 		
 		
 		$project_views = $dbutils->query($table, $columns, $records);
 		if(count($project_views)>0){
-			$impressions_view .= '<span>Project Views ('.$total_views.')</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Views</th></tr></thead>';
+			$impressions_view .= '<span>Project Views ('.($total_views + 1).')</span><table><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Views</th></tr></thead>';
 			for($i = 0;$i<count($project_views);$i++){
 				$id_user = $project_views[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$views = $project_views[$i]['count_views'];
-				$impressions_view .= print_impressions_table($i + 1,$username,$views);
+				$impressions_view .= print_impressions_table($id_user,($i + 1),$username,$views);
 			}
 			$impressions_view .= "</table>";
 		}
@@ -604,7 +607,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		return $impressions_view; 
 	}
 	function analyse_project_favorites($project_id) {
-		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
+		
 		$impressions_view = "";
 		
 		$table = "project_impressions";
@@ -612,18 +615,18 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		$records = array($project_id,"1");
 		$dbutils = new db_utils();
 		
-		$total_likes = $dbutils->is_exists($table, $columns, $records);
+		$total_favorites = $dbutils->is_exists($table, $columns, $records);
 		
 		
 		$project_favorites = $dbutils->query($table, $columns, $records);
-		$impressions_view .= '<span>Project Favorites</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
+		$impressions_view .= '<span>Project Favorites ('.$total_favorites.')</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 		if(count($project_favorites)>0){
 			for($i = 0;$i<count($project_favorites);$i++){
 				echo '<tbody>';
 				$id_user = $project_favorites[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$time = get_human_friendly_time($project_favorites[$i]['commit_time']);
-				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				$impressions_view .= print_impressions_table($id_user,($i + 1),$username,$time);
 				echo '</tbody>';
 			}
 		}
@@ -637,7 +640,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	function analyse_project_likes($project_id) {
 		
-		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
+		
 		$impressions_view = "";
 		
 		$table = "project_impressions";
@@ -649,7 +652,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		
 		
 		$project_likes = $dbutils->query($table, $columns, $records);
-		$impressions_view .= '<span>Project Likes</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
+		$impressions_view .= '<span>Project Likes ('.$total_likes.')</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 			
 		if(count($project_likes)>0){
 			for($i = 0;$i<count($project_likes);$i++){
@@ -657,7 +660,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 				$id_user = $project_likes[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$time = get_human_friendly_time($project_likes[$i]['commit_time']);
-				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				$impressions_view .= print_impressions_table($id_user,($i + 1),$username,$time);
 				echo '</tbody>';
 			}
 			
@@ -670,12 +673,12 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		return $impressions_view;
 	}
 	
-	function print_impressions_table($index,$username,$time){
-		return '<tr><td>'.$index.'</td><td>'.$username.'</td><td>'.$time.'</td></tr>';
+	function print_impressions_table($user_id,$index,$username,$time){
+		return '<tr><td>'.$index.'</td><td onclick="view_user_profile('.$user_id.');">'.$username.'</td><td>'.$time.'</td></tr>';
 	}
 	function analyse_project_unlikes($project_id) {
 
-		//`id_project`, `id_user`, `likes`, `unlikes`, `favorites`, `commit_time` FROM `project_impressions`
+		
 		$impressions_view = "";
 		
 		$table = "project_impressions";
@@ -683,11 +686,11 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		$records = array($project_id,"1");
 		$dbutils = new db_utils();
 		
-		$total_likes = $dbutils->is_exists($table, $columns, $records);
+		$total_unlikes = $dbutils->is_exists($table, $columns, $records);
 		
 		
 		$project_likes = $dbutils->query($table, $columns, $records);
-		$impressions_view .= '<span>Project Unlikes</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
+		$impressions_view .= '<span>Project Unlikes ('.$total_unlikes.')</span><hr /><table class="stripped"><thead><tr><th data-field="index">#</th><th data-field="username">User</th><th data-field="time">Time</th></tr></thead>';
 			
 		if(count($project_likes)>0){
 			for($i = 0;$i<count($project_likes);$i++){
@@ -695,7 +698,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 				$id_user = $project_likes[$i]['id_user'];
 				$username = get_user_username($id_user);
 				$time = get_human_friendly_time($project_likes[$i]['commit_time']);
-				$impressions_view .= print_impressions_table($i + 1,$username,$time);
+				$impressions_view .= print_impressions_table($id_user,($i + 1),$username,$time);
 				echo '</tbody>';
 			}
 			
@@ -836,8 +839,8 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		fetch_projects(false,false);
 	}
 	
-function search_projects(){
-	fetch_projects(true,false);
+function search_projects($myproject = false){
+	fetch_projects(true,$myproject);
 }
 function fetch_projects($search,$myprojects = false){
 	$dbutils = new db_utils();
@@ -938,7 +941,7 @@ function get_human_friendly_time($post_time){
 }
 
 function get_user_username($id_user){
-	
+	if($id_user == 0){ $id_user = -1;}
 	if(isset($_POST['my_user_id']) ){
 		if($_POST['my_user_id'] == $id_user ){
 			return "Me";
@@ -998,10 +1001,13 @@ function get_project_views($id_project){
 	$records = array($id_project);
 	$dbutils = new db_utils();
 	
-	if($dbutils->is_exists($table, $columns, $records) > 0){
+	$count_views = 0;
+	
 		$views = $dbutils->query($table, $columns, $records);
-		return $views[0]['count_views'];
-	}else return 0;
+		for($i = 0;$i<count($views);$i++){
+			$count_views += $views[$i]['count_views'];
+		} 
+	 return $count_views;
 }
 function signup(){
 

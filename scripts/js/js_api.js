@@ -70,6 +70,7 @@ function ajaxCommit(action,method,url,params,intent) {
 	}
 
 	request.onreadystatechange = function(){
+		
 		onReadyStateChange(action,method,url,params,request,intent);
 	}
 	
@@ -77,14 +78,11 @@ function ajaxCommit(action,method,url,params,intent) {
 	
 	if(method.toUpperCase()=="POST"){
 		request.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-		if(getCache(CACHE_USER) == 'null'){
-			alert("You need to be logged in");
-			return;
-		}
+		
 		var myUserId = getCache(MY_USER_ID);
 		if(myUserId != "" || myUserId != "null"){
 			request.send(params	+"&user="+getCache(CACHE_USER)+"&my_user_id="+myUserId );
-		}else{request.send(params	+"&user="+getCache(CACHE_USER) );}
+		}else{request.send(params/*	+"&user="+getCache(CACHE_USER)*/ );}
 		
 	}
 	if(method.toUpperCase()=="GET"){
@@ -148,4 +146,10 @@ function setMargin(id,direction,margin){
     if(direction == 'left'){
         getElement(id).style.marginLeft = margin+"px";
     }
+}
+
+function logout(){
+	setCache(CACHE_USER, null);
+	setCache(MY_USER_ID, null);
+	window.open("index.html", "_self");
 }
