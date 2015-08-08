@@ -256,6 +256,7 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 			
 				if(intent == INTENT_LOGIN){
 					if(request.responseText != "-1"){
+					
 						setCache(CACHE_USER, request.responseText);
 						setCache(MY_USER_ID, request.responseText);
 						window.close();
@@ -265,7 +266,7 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 						getElement('input_login_username').style.color="#FF0000";
 						getElement('input_login_password').style.color="#FF0000";
 					}
-					alert(request.responseText);
+					
 				}
 		}
 

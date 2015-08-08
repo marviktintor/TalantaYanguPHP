@@ -21,18 +21,16 @@ window.onload = function() {
 	
 	
 	init();
+	get_started();
 }
 
 function get_started(){
-	window.open("register.html", "_blank", "width=100;height=100;");
-	/*var cached_user = getCache(CACHE_USER);
-	if(cached_user == null){
+	
+	var cached_user = getCache(CACHE_USER);
+	
+	if(cached_user == 'null'){
 		window.open("register.html", "_blank", "width=100;height=100;");
-		return;
-	}else{
-		setCache(MY_USER_ID, getCache(CACHE_USER));
-		window.open(URL_MY_PROFILE,"_self");
-	}*/
+	}
 }
 
 function init(){
