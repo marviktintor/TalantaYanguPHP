@@ -1,30 +1,21 @@
 FETCHED_PROJECT_HTML = "fetched_project_html";
 
-INTENT_POST_PROJECT = "post_project";
-INTENT_FETCH_PROJECTS = "fetch_projects";
-INTENT_FETCH_SELECTED_PROJECT = "fetch_selected_project";
-INTENT_LEAVE_PROJECT_COMMENT = "leave_project_comments";
-INTENT_SEARCH_PROJECT = "search_project";
+INTENT_POST_MY_PROJECT = "post_my_project";
+INTENT_FETCH_MY_PROJECTS = "fetch_my_projects";
+INTENT_FETCH_MY_SELECTED_PROJECT = "fetch_my_selected_project";
 
-INTENT_LIKE_PROJECT = "like_project";
-INTENT_UNLIKE_PROJECT = "unlike_project";
-INTENT_FAVORITE_PROJECT = "favorite_project";
 
-INTENT_LIKE_COMMENT = "like_comment";
-INTENT_UNLIKE_COMMENT = "unlike_comment";
-INTENT_FAVORITE_COMMENT = "favorite_comment";
+INTENT_SEARCH_MY_PROJECT = "search_my_projects";
+MY_SELECTED_PROJECT = "my_selected_project"
 
-INTENT_SEARCH = "search";
 
-window.onload = function() {
-
-	
-	
-	init();
+window.onload = function() {	
+init();
 }
 
 function init(){
-	setCache(SELECTED_PROJECT, "-1");
+	
+	setCache(MY_SELECTED_PROJECT, "-1");
 	hideElement('post_project');
 	
 	setEventListeners();
@@ -55,7 +46,6 @@ function fillForm(){
 
 function addButtonEventListeners(){
 	
-	getElement('id_button_leave_comment').addEventListener('click',post_project_comments,false);
 	getElement('id_button_post_project').addEventListener('click',post_project,false);
 	getElement('my_profile').addEventListener('click',my_profile,false);
 	
@@ -68,12 +58,12 @@ function addInputEventListeners(){
 
 function search_project(){
 	var searchKey = getElementValue('input_search_projects');
-	params = "action="+ACTION_QUERY+"&intent="+INTENT_SEARCH_PROJECT+"&search_key="+searchKey;
+	params = "action="+ACTION_QUERY+"&intent="+INTENT_SEARCH_MY_PROJECT+"&search_key="+searchKey;
 	
 	if(searchKey == ""){
 		fetch_projects();
 	}else{
-		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_SEARCH_PROJECT);
+		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_SEARCH_MY_PROJECT);
 	}
 	
 }
@@ -82,22 +72,22 @@ function view_project(project_id){
 	document.getElementById('post_project').style.display = 'none';
 	document.getElementById('div_leave_comments').style.display = 'block';
 	
-	if(project_id != ""+getCache(SELECTED_PROJECT)){
-		setCache(SELECTED_PROJECT, project_id);
-		params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_SELECTED_PROJECT+"&id_project="+project_id;
-		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_SELECTED_PROJECT);
+	if(project_id != ""+getCache(MY_SELECTED_PROJECT)){
+		setCache(MY_SELECTED_PROJECT, project_id);
+		params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_MY_SELECTED_PROJECT+"&id_project="+project_id+"&my_user_id="+getCache(MY_USER_ID);
+		ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_MY_SELECTED_PROJECT);
 	}else{ 
 		setElementHtml('selected_project_comments', getCache(FETCHED_PROJECT_HTML));
 	}
 	
 }
 function fetch_projects(){
-	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_PROJECTS
-	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_PROJECTS);
+	params = "action="+ACTION_QUERY+"&intent="+INTENT_FETCH_MY_PROJECTS+"&my_user_id="+getCache(MY_USER_ID);
+	ajaxCommit(ACTION_QUERY, METHOD_POST, URL_WORKER, params, INTENT_FETCH_MY_PROJECTS);
 }
 
 function post_project_comments(){
-	if(getCache(SELECTED_PROJECT) == "-1"){
+	if(getCache(MY_SELECTED_PROJECT) == "-1"){
 		alert("Please click on a Project");
 		return;
 	}
@@ -105,7 +95,7 @@ function post_project_comments(){
 	var comment = getElementValue('input_leave_comment');
 	
 	if(comment != ""){
-		project_id = getCache(SELECTED_PROJECT)
+		project_id = getCache(MY_SELECTED_PROJECT)
 		params = "action="+ACTION_INSERT+"&intent="+INTENT_LEAVE_PROJECT_COMMENT+"&id_project="+project_id+"&comment="+comment;
 		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_LEAVE_PROJECT_COMMENT);
 		
@@ -139,11 +129,11 @@ function post_project(){
 			return;
 		}
 		
-		params = "action="+ACTION_INSERT+"&intent="+INTENT_POST_PROJECT
+		params = "action="+ACTION_INSERT+"&intent="+INTENT_POST_MY_PROJECT
 		+"&tags=" +tags
 		+"&title=" +title
 		+"&desc=" +desc;
-		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_POST_PROJECT);
+		ajaxCommit(ACTION_INSERT, METHOD_POST, URL_WORKER, params, INTENT_POST_MY_PROJECT);
 	}
 	
 }
@@ -212,20 +202,20 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 	if (request.readyState == 4 && request.status == 200) {
 
 		if (action == ACTION_INSERT) {
-			if (intent == INTENT_POST_PROJECT) {
+			if (intent == INTENT_POST_MY_PROJECT) {
 				setElementHtml('posted_projects', request.responseText);
 			}
 			if (intent == INTENT_LEAVE_PROJECT_COMMENT) {
-				view_project(getCache(SELECTED_PROJECT));
+				view_project(getCache(MY_SELECTED_PROJECT));
 			}
 			
-			if (intent == INTENT_LIKE_PROJECT || intent == INTENT_UNLIKE_PROJECT || intent == INTENT_FAVORITE_PROJECT ) {
+			/*if (intent == INTENT_LIKE_PROJECT || intent == INTENT_UNLIKE_PROJECT || intent == INTENT_FAVORITE_PROJECT ) {
 				fetch_projects();
 			}
 			
 			if (intent == INTENT_LIKE_COMMENT || intent == INTENT_UNLIKE_COMMENT || intent == INTENT_FAVORITE_COMMENT) {
-				view_project(getCache(SELECTED_PROJECT));
-			}
+				view_project(getCache(MY_SELECTED_PROJECT));
+			}*/
 		}
 
 		if (action == ACTION_UPDATE) {
@@ -237,14 +227,14 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 		}
 
 		if (action == ACTION_QUERY) {
-			if (intent == INTENT_FETCH_PROJECTS) {
+			if (intent == INTENT_FETCH_MY_PROJECTS) {
 				setElementHtml('posted_projects', request.responseText);
 			}
-			if (intent == INTENT_SEARCH_PROJECT) { 
+			if (intent == INTENT_SEARCH_MY_PROJECT) { 
 				setElementHtml('posted_projects', request.responseText);
 				setElementHtml('selected_project_comments','');
 			}
-			if (intent == INTENT_FETCH_SELECTED_PROJECT) { 
+			if (intent == INTENT_FETCH_MY_SELECTED_PROJECT) { 
 				var fetchedProjectHtml = request.responseText;
 				setElementHtml('selected_project_comments', fetchedProjectHtml);
 				setCache(FETCHED_PROJECT_HTML, fetchedProjectHtml);

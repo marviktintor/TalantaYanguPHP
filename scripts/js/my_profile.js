@@ -225,12 +225,12 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 		if (action == ACTION_INSERT) {
 			
 			if(intent == INTENT_ADD_SCHOOL_INFO){
-				//loadUserProfile();
-				setElementHtml('test', request.responseText);
+				loadUserProfile();
+				
 			}
 			if(intent == INTENT_ADD_WORK_INFO ){
-				//loadUserProfile();
-				setElementHtml('test', request.responseText);
+				loadUserProfile();
+				
 			}
 		}
 

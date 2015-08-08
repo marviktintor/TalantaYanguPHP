@@ -16,29 +16,39 @@
 </head>
 <body>
 
+<div class="card-panel teal lighten-2" style="margin-top:-10px; height:70px; position:relative;">
+	 	<div class="left">
+	 		<a  class="waves-effect waves-teal btn-flat modal-trigger"><h6 style="color:#FFF">WELCOME</h6></a>
+	 	</div>
+	 	<div class="right">
+	 		<a class="waves-effect waves-teal btn-flat" id="my_profile"><h6 style="color:#FFF">POSTED PROJECTS</h6></a>
+			<a class="waves-effect waves-teal btn-flat"><h6 style="color:#FFF" id="id_tag_auth_toggle" >LOG IN</h6></a>
+	 	</div>
+</div>	 
 
-	<div id="page_register">
+	<div style="clear:both;"></div>	
+	<div id="page_register" style="float:left; width:40%; margin:5%;">
 
-		<div class="row">
+		<div class="card">
 			<form class="col ">
 				<div class="row">
-					<div class="input-field col ">
+					<div class=" col " style="width: 50%;">
 						<input id="input_register_firstname" type="text" 
 							placeholder="Firstname">
 					</div>
-					<div class="input-field col ">
+					<div class=" col " style="width: 50%;">
 						<input id="input_register_lastname" type="text" 
 							placeholder="Lastname">
 					</div>
-
+				</div>
 					<div class="row">
 
-						<div class="input-field col ">
+						<div class=" col " style="width: 50%;">
 							<input id="input_register_email" type="email" 
 								placeholder="Email">
 						</div>
 
-						<div class="input-field col ">
+						<div class=" col " style="width: 50%;">
 							<input id="input_register_phonenumber" type="text" 
 								placeholder="Phonenumber">
 						</div>
@@ -46,28 +56,61 @@
 
 					<div class="row">
 
-						<div class="input-field col ">
+						<div class=" col " style="width: 50%;">
 							<input id="input_register_id_number" type="text" 
 								placeholder="ID Number or Passport">
 						</div>
-					</div>
-
-					<div class="row">
-						<div class="input-field col ">
+					
+						<div class=" col " style="width: 50%;">
 							<input id="input_register_username" type="text" 
 								placeholder="Username">
 						</div>
-						<div class="input-field col ">
-
-							<input id="input_register_password" type="password" 
-								placeholder="Password"><a id="id_button_generate_password"
-								class="waves-effect waves-light btn">Generate</a>
+					</div>
+					<div class="row">
+						<div class=" col " style="width: 50%;">
+	
+								<input id="input_register_password" type="password" placeholder="Password">
+							</div>
+					
+						<div class=" col " style="width: 50%;">
+		
+							<a id="id_button_generate_password" class="waves-effect waves-light btn" style="">Generate</a>
 						</div>
+					</div>
 						<div class="row">
-							<div class="input-field col ">
+							<div  style="width: 50%;margin-left:30%;">
 								<a class="waves-effect waves-light btn-large" id="id_button_get_started">Get Started</a>
 							</div>
 						</div>
+			</form>
+		</div>
+	</div>
+	<div id="page_login" style="float:left; width:40%; margin:5%;padding:5%;">
+
+		<div class="card">
+			<form >
+				
+
+					<div class="row">
+
+						
+					
+						<div class=" col " style="width: 50%;margin-top:40px;">
+							<input id="input_login_username" type="text" 
+								placeholder="Username">
+						</div>
+						<div class=" col " style="width: 50%; margin-top:40px;">
+	
+								<input id="input_login_password" type="password" placeholder="Password">
+							</div>
+							
+					</div>
+					
+					<div class="row">
+						<div  style="width: 50%;margin-left:30%;">
+							<a class="waves-effect waves-light btn-large" id="id_button_login">Get Started</a>
+						</div>
+					</div>
 			</form>
 		</div>
 

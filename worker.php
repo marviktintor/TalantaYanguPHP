@@ -19,6 +19,9 @@ define ( 'INTENT_SEARCH_PROJECT', 'search_project' );
 define ( 'INTENT_ADD_SCHOOL_INFO', 'add_school_info' );
 define ( 'INTENT_ADD_WORK_INFO', 'add_work_info' );
 
+define ( 'INTENT_FETCH_MY_PROJECTS', 'fetch_my_projects' );
+define ( 'INTENT_FETCH_MY_SELECTED_PROJECT', 'fetch_my_selected_project' );
+
 
 define ( 'INTENT_LIKE_PROJECT', 'like_project' );
 define ( 'INTENT_UNLIKE_PROJECT', 'unlike_project' );
@@ -77,7 +80,10 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 	}
 	if ($action == ACTION_QUERY) {
 		if ($intent == INTENT_FETCH_PROJECTS) {
-			fetch_projects(false);
+			fetch_projects(false,false);
+		}
+		if ($intent == INTENT_FETCH_MY_PROJECTS) {
+			fetch_projects(false,true);
 		}
 		if ($intent == INTENT_SEARCH_PROJECT) {
 			search_projects();
@@ -85,8 +91,14 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		if ($intent == INTENT_FETCH_SELECTED_PROJECT) {
 			fetch_project_infos();
 		}
+		if ($intent == INTENT_FETCH_MY_SELECTED_PROJECT) {
+			fetch_project_infos();
+		}
 		if ($intent == INTENT_VIEW_PERSON_PROFILE) {
 			show_selected_user_profile();
+		}
+		if ($intent == INTENT_LOGIN) {
+			login();
 		}
 		
 	}
@@ -351,7 +363,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 			
 		}
 		if(count($employment_infos)==0){
-			$employment_infos = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
+			$employment_info = '<div style="margin:20px; padding:15px;" class=" minimal-margin minimal-padding hoverable card-panel teal lighten-2" >
 						<h5 style="color:#FFF;">'.get_user_username($id_user).' has not posted any employment Info! </h5>
 					</div>';
 		}
@@ -377,8 +389,7 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		return '<div class="card hoverable " style="padding:10px; margin:10px;">
 				<label class="right">'.$start_date.' - '.$stop_date.'</label><br />
 				<span>'.$role.'</span><br />
-				<label class="left">'.$county.'</label><br />
-				</div>';
+				<label class="left">'.get_company_name($id_company).'</label><br /></div>';
 		
 		
 	}
@@ -392,6 +403,18 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		$schools = $dbutils->query($table, $columns, $records);
 		if(count($schools)>0){
 			return $schools[0]['school_name']."(".$schools[0]['county'].")";
+		}else return "Unknown County";
+	}
+	function get_company_name($id_company){
+		
+		$table = "company";
+		$columns= array("id_company");
+		$records = array($id_company);
+		$dbutils = new db_utils();
+		
+		$companies = $dbutils->query($table, $columns, $records);
+		if(count($companies)>0){
+			return $companies[0]['company_name']."(".$companies[0]['county'].")";
 		}else return "Unknown County";
 	}
 	function like_project_comment($check_unlike){
@@ -661,15 +684,17 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 			$dbutils->insert_records($table, $columns, $records);
 		}
 		
-		fetch_projects(false);
+		fetch_projects(false,false);
 	}
 	
 function search_projects(){
-	fetch_projects(true);
+	fetch_projects(true,false);
 }
-function fetch_projects($search){
+function fetch_projects($search,$myprojects = false){
 	$dbutils = new db_utils();
 	$table = "projects";
+	
+	if(isset($_POST['my_user_id'])){$id_user = $_POST['my_user_id'];}
 	
 	$projects = null;
 	
@@ -681,8 +706,8 @@ function fetch_projects($search){
 		
 		$user_ids = opt_user_id($search_key);
 		if(count($user_ids) == 0){
-			$columns = array("project_title", "project_tags", "project_desc");
-			$records= array($search_key,$search_key,$search_key);
+			$columns = array("project_title", "project_tags", "project_desc","id_user");
+			$records= array($search_key,$search_key,$search_key,$id_user);
 			$projects = $dbutils->search($table, $columns, $records);
 		}
 		if(count($user_ids) > 0){
@@ -699,6 +724,10 @@ function fetch_projects($search){
 		
 	}else{
 		$columns = array(); $records= array();
+		if($myprojects){
+			$columns = array("id_user"); $records= array($id_user);
+		}
+		
 		$projects = $dbutils->query($table, $columns, $records);
 	}
 	
