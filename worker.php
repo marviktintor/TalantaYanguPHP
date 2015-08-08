@@ -247,9 +247,9 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 							</div>
 						</div>
 					</div>
-					<footer id="footer">
-						<ul class="icons">
-							
+					<footer id="footer" style="background:#989898;">
+						<ul class="icons" >
+							'.$social_media_info.'
 						</ul>
 						<ul class="copyright">
 							<li>&copy; </li><li> <a href="#">Kenya Talents</a></li>
@@ -374,8 +374,8 @@ if(isset($_POST['action'])  && isset($_POST['intent'])){
 		return $employment_info;
 	}
 	function get_social_media_info($id_users){
-		$social_media ='<li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
-							<li><a href="#" class="icon fa-github"><span class="label">Github</span></a></li>
+		return $social_media ='<li><a href="https://twitter.com/vic_mwenda" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+							<li><a href="github.com/marviktintor" class="icon fa-github"><span class="label">Github</span></a></li>
 							<li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
 							<li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>';
 	}
@@ -879,7 +879,8 @@ function fetch_projects($search,$myprojects = false){
 	}else{
 		$columns = array(); $records= array();
 		if($myprojects){
-			//$columns = array("id_user"); $records= array($id_user);
+			$id_user = $_POST['my_user_id'];
+			$columns = array("id_user"); $records= array($id_user);
 		}
 		
 		$projects = $dbutils->query($table, $columns, $records);
