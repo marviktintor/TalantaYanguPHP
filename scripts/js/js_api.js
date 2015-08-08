@@ -81,7 +81,11 @@ function ajaxCommit(action,method,url,params,intent) {
 			alert("You need to be logged in");
 			return;
 		}
-		request.send(params	+"&user="+getCache(CACHE_USER) );
+		var myUserId = getCache(MY_USER_ID);
+		if(myUserId != "" || myUserId != "null"){
+			request.send(params	+"&user="+getCache(CACHE_USER)+"&my_user_id="+myUserId );
+		}else{request.send(params	+"&user="+getCache(CACHE_USER) );}
+		
 	}
 	if(method.toUpperCase()=="GET"){
 		request.send(null);

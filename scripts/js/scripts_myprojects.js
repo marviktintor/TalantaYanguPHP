@@ -4,6 +4,15 @@ INTENT_POST_MY_PROJECT = "post_my_project";
 INTENT_FETCH_MY_PROJECTS = "fetch_my_projects";
 INTENT_FETCH_MY_SELECTED_PROJECT = "fetch_my_selected_project";
 
+INTENT_LIKE_PROJECT = "like_project";
+INTENT_UNLIKE_PROJECT = "unlike_project";
+INTENT_FAVORITE_PROJECT = "favorite_project";
+
+INTENT_LIKE_COMMENT = "like_comment";
+INTENT_UNLIKE_COMMENT = "unlike_comment";
+INTENT_FAVORITE_COMMENT = "favorite_comment";
+
+INTENT_LEAVE_PROJECT_COMMENT = "leave_project_comments";
 
 INTENT_SEARCH_MY_PROJECT = "search_my_projects";
 MY_SELECTED_PROJECT = "my_selected_project"
@@ -209,13 +218,14 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 				view_project(getCache(MY_SELECTED_PROJECT));
 			}
 			
-			/*if (intent == INTENT_LIKE_PROJECT || intent == INTENT_UNLIKE_PROJECT || intent == INTENT_FAVORITE_PROJECT ) {
+			if (intent == INTENT_LIKE_PROJECT || intent == INTENT_UNLIKE_PROJECT || intent == INTENT_FAVORITE_PROJECT ) {
+				
 				fetch_projects();
 			}
 			
 			if (intent == INTENT_LIKE_COMMENT || intent == INTENT_UNLIKE_COMMENT || intent == INTENT_FAVORITE_COMMENT) {
 				view_project(getCache(MY_SELECTED_PROJECT));
-			}*/
+			}
 		}
 
 		if (action == ACTION_UPDATE) {
@@ -229,12 +239,14 @@ function onReadyStateChange(action, method, url, params, request, intent) {
 		if (action == ACTION_QUERY) {
 			if (intent == INTENT_FETCH_MY_PROJECTS) {
 				setElementHtml('posted_projects', request.responseText);
+				view_project(getCache(MY_SELECTED_PROJECT));
+				
 			}
 			if (intent == INTENT_SEARCH_MY_PROJECT) { 
 				setElementHtml('posted_projects', request.responseText);
 				setElementHtml('selected_project_comments','');
 			}
-			if (intent == INTENT_FETCH_MY_SELECTED_PROJECT) { 
+			if (intent == INTENT_FETCH_MY_SELECTED_PROJECT) {
 				var fetchedProjectHtml = request.responseText;
 				setElementHtml('selected_project_comments', fetchedProjectHtml);
 				setCache(FETCHED_PROJECT_HTML, fetchedProjectHtml);
